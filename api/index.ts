@@ -29,6 +29,8 @@ const authenticate = (req: any, res: any, next: any) => {
   }
 };
 
+app.get('/api/v1/ping', (req, res) => res.json({ message: 'pong' }));
+
 // --- AUTHENTICATION ---
 app.post('/api/v1/auth/login', async (req, res) => {
   const { email, password } = req.body;
@@ -58,7 +60,7 @@ app.post('/api/v1/auth/login', async (req, res) => {
     });
   } catch (error) {
     console.error('Login error:', error);
-    res.status(500).json({ message: 'Erreur serveur' });
+    res.status(500).json({ message: 'Erreur serveur: ' + (error.message || String(error)) });
   }
 });
 
@@ -81,7 +83,7 @@ app.get('/api/v1/stats', authenticate, async (req, res) => {
     });
   } catch (error) {
     console.error('Stats error:', error);
-    res.status(500).json({ message: 'Erreur serveur' });
+    res.status(500).json({ message: 'Erreur serveur: ' + (error.message || String(error)) });
   }
 });
 
@@ -91,7 +93,7 @@ app.get('/api/v1/admin/formations', authenticate, async (req, res) => {
     const result = await db.select().from(formations).orderBy(desc(formations.createdAt));
     res.json(result);
   } catch (error) {
-    res.status(500).json({ message: 'Erreur serveur' });
+    res.status(500).json({ message: 'Erreur serveur: ' + (error.message || String(error)) });
   }
 });
 
@@ -100,7 +102,7 @@ app.post('/api/v1/admin/formations', authenticate, async (req, res) => {
     const result = await db.insert(formations).values(req.body).returning();
     res.json(result[0]);
   } catch (error) {
-    res.status(500).json({ message: 'Erreur serveur' });
+    res.status(500).json({ message: 'Erreur serveur: ' + (error.message || String(error)) });
   }
 });
 
@@ -112,7 +114,7 @@ app.put('/api/v1/admin/formations/:id', authenticate, async (req, res) => {
       .returning();
     res.json(result[0]);
   } catch (error) {
-    res.status(500).json({ message: 'Erreur serveur' });
+    res.status(500).json({ message: 'Erreur serveur: ' + (error.message || String(error)) });
   }
 });
 
@@ -124,7 +126,7 @@ app.put('/api/v1/admin/formations/:id/toggle', authenticate, async (req, res) =>
       .returning();
     res.json(result[0]);
   } catch (error) {
-    res.status(500).json({ message: 'Erreur serveur' });
+    res.status(500).json({ message: 'Erreur serveur: ' + (error.message || String(error)) });
   }
 });
 
@@ -133,7 +135,7 @@ app.delete('/api/v1/admin/formations/:id', authenticate, async (req, res) => {
     await db.delete(formations).where(eq(formations.id, Number(req.params.id)));
     res.json({ success: true });
   } catch (error) {
-    res.status(500).json({ message: 'Erreur serveur' });
+    res.status(500).json({ message: 'Erreur serveur: ' + (error.message || String(error)) });
   }
 });
 
@@ -143,7 +145,7 @@ app.get('/api/v1/admin/contacts', authenticate, async (req, res) => {
     const result = await db.select().from(contacts).orderBy(desc(contacts.createdAt));
     res.json(result);
   } catch (error) {
-    res.status(500).json({ message: 'Erreur serveur' });
+    res.status(500).json({ message: 'Erreur serveur: ' + (error.message || String(error)) });
   }
 });
 
@@ -153,7 +155,7 @@ app.get('/api/v1/admin/contacts/:id', authenticate, async (req, res) => {
     if (result.length === 0) return res.status(404).json({ message: 'Contact not found' });
     res.json(result[0]);
   } catch (error) {
-    res.status(500).json({ message: 'Erreur serveur' });
+    res.status(500).json({ message: 'Erreur serveur: ' + (error.message || String(error)) });
   }
 });
 
@@ -165,7 +167,7 @@ app.put('/api/v1/admin/contacts/:id/read', authenticate, async (req, res) => {
       .returning();
     res.json(result[0]);
   } catch (error) {
-    res.status(500).json({ message: 'Erreur serveur' });
+    res.status(500).json({ message: 'Erreur serveur: ' + (error.message || String(error)) });
   }
 });
 
@@ -177,7 +179,7 @@ app.put('/api/v1/admin/contacts/:id/status', authenticate, async (req, res) => {
       .returning();
     res.json(result[0]);
   } catch (error) {
-    res.status(500).json({ message: 'Erreur serveur' });
+    res.status(500).json({ message: 'Erreur serveur: ' + (error.message || String(error)) });
   }
 });
 
@@ -186,7 +188,7 @@ app.delete('/api/v1/admin/contacts/:id', authenticate, async (req, res) => {
     await db.delete(contacts).where(eq(contacts.id, Number(req.params.id)));
     res.json({ success: true });
   } catch (error) {
-    res.status(500).json({ message: 'Erreur serveur' });
+    res.status(500).json({ message: 'Erreur serveur: ' + (error.message || String(error)) });
   }
 });
 
@@ -196,7 +198,7 @@ app.get('/api/v1/admin/media', authenticate, async (req, res) => {
     const result = await db.select().from(media).orderBy(desc(media.createdAt));
     res.json(result);
   } catch (error) {
-    res.status(500).json({ message: 'Erreur serveur' });
+    res.status(500).json({ message: 'Erreur serveur: ' + (error.message || String(error)) });
   }
 });
 
@@ -211,7 +213,7 @@ app.delete('/api/v1/admin/media/:id', authenticate, async (req, res) => {
     await db.delete(media).where(eq(media.id, Number(req.params.id)));
     res.json({ success: true });
   } catch (error) {
-    res.status(500).json({ message: 'Erreur serveur' });
+    res.status(500).json({ message: 'Erreur serveur: ' + (error.message || String(error)) });
   }
 });
 
@@ -221,7 +223,7 @@ app.get('/api/v1/admin/pages', authenticate, async (req, res) => {
     const result = await db.select().from(pages).orderBy(pages.slug);
     res.json(result);
   } catch (error) {
-    res.status(500).json({ message: 'Erreur serveur' });
+    res.status(500).json({ message: 'Erreur serveur: ' + (error.message || String(error)) });
   }
 });
 
@@ -242,7 +244,7 @@ app.post('/api/v1/admin/pages/batch', authenticate, async (req, res) => {
     
     res.json({ success: true });
   } catch (error) {
-    res.status(500).json({ message: 'Erreur serveur' });
+    res.status(500).json({ message: 'Erreur serveur: ' + (error.message || String(error)) });
   }
 });
 
