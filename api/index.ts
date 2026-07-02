@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
-import { getDb } from './db';
-import { users, formations, contacts, media, pages } from './db/schema';
+import { getDb } from './db/index.js';
+import { users, formations, contacts, media, pages } from './db/schema.js';
 import { eq, desc } from 'drizzle-orm';
 import jwt from 'jsonwebtoken';
 
