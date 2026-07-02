@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* POLICES */
+  --font-sans: 'DM Sans', sans-serif;
+  --font-serif: 'Cormorant Garamond', serif;
+
+  /* PALETTE CHROMATIQUE (Anita Orchidée Groupe) */
+  --color-brand-blue: #1e3a8a; /* blue-900 */
+  --color-brand-amber: #f59e0b; /* amber-500 */
+  --color-brand-amber-hover: #fbbf24; /* amber-400 */
+}
+
+@layer base {
+  :root {
+    font-family: 'DM Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overscroll-behavior: none;
+  }
+
+  body {
+    background-color: #ffffff;
+    color: #1e293b; /* slate-800 */
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cormorant Garamond', serif;
+  }
+}
+
+@layer utilities {
+  .title-font {
+    font-family: 'Cormorant Garamond', serif;
+  }
+  .shadow-luxury {
+    box-shadow: 0 10px 40px -10px rgba(30, 58, 138, 0.1);
+  }
+  .glassmorphism {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .clip-text {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+  }
+  .clip-text-reveal {
+    overflow: hidden;
+  }
+}
+
+/* Scrollbar invisible */
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
