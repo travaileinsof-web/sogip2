@@ -10,6 +10,8 @@
   --color-brand-blue: #1e3a8a; /* blue-900 */
   --color-brand-amber: #f59e0b; /* amber-500 */
   --color-brand-amber-hover: #fbbf24; /* amber-400 */
+  --color-sogip-primary: #1e3a8a;
+  --color-sogip-secondary: #f59e0b;
 }
 
 @layer base {

@@ -1,0 +1,14 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Redirection du trafic API vers le dossier api (backend)
+  RewriteCond %{REQUEST_URI} ^/api/ [NC]
+  RewriteRule ^api/(.*)$ api/index.php [L,QSA]
+
+  # Pour la SPA React (fallback sur index.html si le fichier/dossier n'existe pas)
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_URI} !^/api/ [NC]
+  RewriteRule ^ index.html [L]
+</IfModule>

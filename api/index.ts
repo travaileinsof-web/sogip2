@@ -4,13 +4,27 @@ import { getDb } from './db/index.js';
 import { users, formations, contacts, media, pages } from './db/schema.js';
 import { eq, desc } from 'drizzle-orm';
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
+import rateLimit from 'express-rate-limit';
 
 const app = express();
 
-app.use(cors());
+const corsOptions = {
+  origin: process.env.APP_ENV === 'production' 
+    ? ['https://sogipgroup.com', 'https://www.sogipgroup.com']
+    : ['http://localhost:5173', 'http://127.0.0.1:5173'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
-const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-key-for-sogip-admin-2026';
+if (!process.env.JWT_SECRET) {
+  throw new Error('FATAL: JWT_SECRET environment variable is not set');
+}
+const JWT_SECRET = process.env.JWT_SECRET;
 
 // Middleware for authentication
 const authenticate = (req: any, res: any, next: any) => {
@@ -32,14 +46,26 @@ const authenticate = (req: any, res: any, next: any) => {
 app.get('/api/v1/ping', (req, res) => res.json({ message: 'pong' }));
 
 // --- AUTHENTICATION ---
-app.post('/api/v1/auth/login', async (req, res) => {
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: { message: 'Trop de tentatives. Réessayez dans 15 minutes.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.post('/api/v1/auth/login', loginLimiter, async (req, res) => {
   const { email, password } = req.body;
   
   try {
     const user = await getDb().select().from(users).where(eq(users.email, email)).limit(1);
     
-    // Simplification for demo: In production, compare hashed passwords!
-    if (user.length === 0 || user[0].passwordHash !== password) {
+    if (user.length === 0) {
+      return res.status(401).json({ message: 'Identifiants incorrects' });
+    }
+    
+    const isValid = await bcrypt.compare(password, user[0].passwordHash);
+    if (!isValid) {
       return res.status(401).json({ message: 'Identifiants incorrects' });
     }
     

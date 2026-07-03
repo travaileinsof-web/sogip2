@@ -117,7 +117,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <div>
             <h4 className="font-semibold text-lg mb-4 text-amber-500">Contact</h4>
             <ul className="space-y-2 text-sm text-slate-400">
-              <li>{contactData?.info?.email || "contact@sogipgroup.com"}</li>
+              <li><a href="mailto:camus@sogipgroup.com" className="hover:text-amber-400 transition-colors">camus@sogipgroup.com</a></li>
+              <li><a href="mailto:sogipinfos@sogipgroup.com" className="hover:text-amber-400 transition-colors">sogipinfos@sogipgroup.com</a></li>
               <li>{contactData?.info?.telephone || "+224 620 52 12 49"}</li>
               <li>{contactData?.info?.adresse || "Bluezone de Dixinn, Conakry, Guinée"}</li>
             </ul>
@@ -125,13 +126,21 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <div>
             <h4 className="font-semibold text-lg mb-4 text-amber-500">Réseaux</h4>
             <ul className="space-y-2 text-sm text-slate-400">
-              <li><a href="#" className="hover:text-amber-500 transition">LinkedIn</a></li>
-              <li><a href="#" className="hover:text-amber-500 transition">Facebook</a></li>
+              {contactData?.info?.linkedin && (
+                <li><a href={contactData.info.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-amber-500 transition">LinkedIn</a></li>
+              )}
+              {contactData?.info?.facebook && (
+                <li><a href={contactData.info.facebook} target="_blank" rel="noopener noreferrer" className="hover:text-amber-500 transition">Facebook</a></li>
+              )}
+              {(!contactData?.info?.linkedin && !contactData?.info?.facebook) && (
+                <li className="italic opacity-50">Aucun réseau pour le moment</li>
+              )}
             </ul>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto px-6 mt-12 pt-8 border-t border-slate-800 text-center text-sm text-slate-500">
-          © {new Date().getFullYear()} SOGIP Group. Tous droits réservés.
+        <div className="max-w-7xl mx-auto px-6 mt-12 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center text-sm text-slate-500">
+          <span>© {new Date().getFullYear()} SOGIP Group. Tous droits réservés.</span>
+          <Link to="/mentions-legales" className="hover:text-amber-500 transition mt-4 md:mt-0">Mentions Légales</Link>
         </div>
       </footer>
 

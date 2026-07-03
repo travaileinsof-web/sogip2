@@ -12,30 +12,41 @@ interface PageContentItem {
   actif: number;
 }
 
+// Cache global pour éviter les requêtes dupliquées
+const pageCache: Record<string, Record<string, Record<string, string>>> = {};
+
 export const usePageData = (pageName: string) => {
-  const [data, setData] = useState<Record<string, Record<string, string>>>({});
-  const [loading, setLoading] = useState<boolean>(true);
+  const [data, setData] = useState<Record<string, Record<string, string>>>(
+    pageCache[pageName] || {}
+  );
+  const [loading, setLoading] = useState<boolean>(!pageCache[pageName]);
   const [error, setError] = useState<string | null>(null);
+  const hasFetched = React.useRef(!!pageCache[pageName]);
 
   useEffect(() => {
+    if (hasFetched.current) return;
+
     const fetchPageData = async () => {
       setLoading(true);
       try {
-        const response = await api.get('/pages');
-        if (response.success && Array.isArray(response.data)) {
-          // Filtrer par page et transformer en objet imbriqué: data[section][cle] = valeur
-          const pageItems = response.data.filter((item: PageContentItem) => item.page === pageName);
+        const response = await api.get(`/pages/${pageName}`);
+        if (response.success && response.data) {
+          // Gérer soit le format PHP (déjà imbriqué) soit un format plat
+          let formattedData = response.data;
           
-          const formattedData: Record<string, Record<string, string>> = {};
-          
-          pageItems.forEach((item: PageContentItem) => {
-            if (!formattedData[item.section]) {
-              formattedData[item.section] = {};
-            }
-            formattedData[item.section][item.cle] = item.valeur;
-          });
-          
+          if (Array.isArray(response.data)) {
+            // Fallback si c'est le vieux format
+            formattedData = {};
+            response.data.forEach((item: PageContentItem) => {
+              if (item.page !== pageName) return;
+              if (!formattedData[item.section]) formattedData[item.section] = {};
+              formattedData[item.section][item.cle] = item.valeur;
+            });
+          }
+
+          pageCache[pageName] = formattedData;
           setData(formattedData);
+          hasFetched.current = true;
         } else {
           setError('Format de réponse invalide');
         }

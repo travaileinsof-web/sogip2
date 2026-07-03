@@ -1,19 +1,25 @@
 import React from 'react';
 import FadeIn from '../components/animations/FadeIn';
+import { Helmet } from 'react-helmet-async';
 import { usePageData } from '../hooks/usePageData';
-
+import { sanitizeHtml } from '../utils/sanitize';
 const About: React.FC = () => {
   const { data } = usePageData('about');
 
   return (
-    <div className="w-full bg-slate-50 min-h-screen">
+    <>
+      <Helmet>
+        <title>À propos - SOGIP GROUP</title>
+        <meta name="description" content="Découvrez SOGIP Group, notre histoire, nos valeurs et nos engagements." />
+      </Helmet>
+      <div className="w-full bg-slate-50 min-h-screen">
       {/* HEADER */}
       <section className="relative pt-32 pb-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <FadeIn>
             <h1 
               className="title-font text-5xl md:text-6xl font-bold mb-6 text-blue-900 text-center"
-              dangerouslySetInnerHTML={{ __html: data?.hero?.titre || `À propos de <span className="text-amber-500">Nous</span>` }}
+              dangerouslySetInnerHTML={{ __html: sanitizeHtml(data?.hero?.titre || `À propos de <span className="text-amber-500">Nous</span>`) }}
             />
             <p className="text-center text-slate-600 max-w-3xl mx-auto text-lg leading-relaxed">
               {data?.hero?.sous_titre || "SOGIP Group est une holding guinéenne multisectorielle spécialisée dans la construction, l'immobilier, les énergies renouvelables et la formation professionnelle. Notre mission est de développer des solutions modernes, durables et accessibles répondant aux besoins des particuliers, des entreprises et des institutions."}
@@ -65,7 +71,8 @@ const About: React.FC = () => {
           </FadeIn>
         </div>
       </section>
-    </div>
+      </div>
+    </>
   );
 };
 

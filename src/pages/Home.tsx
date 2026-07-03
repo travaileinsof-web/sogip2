@@ -1,13 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import FadeIn from '../components/animations/FadeIn';
 import { usePageData } from '../hooks/usePageData';
+import { sanitizeHtml } from '../utils/sanitize';
 
 const Home: React.FC = () => {
   const { data } = usePageData('home');
 
   return (
-    <div className="w-full">
+    <>
+      <Helmet>
+        <title>Accueil - SOGIP GROUP</title>
+        <meta name="description" content={data?.hero?.sous_titre?.substring(0, 160) || "SOGIP Group est une holding guinéenne multisectorielle spécialisée dans la construction, l'immobilier, les énergies renouvelables et la formation."} />
+      </Helmet>
+      <div className="w-full">
       {/* HERO */}
       <section className="relative h-[85vh]">
         <img 
@@ -22,13 +29,13 @@ const Home: React.FC = () => {
             <FadeIn delay={0.1}>
               <h1 
                 className="title-font text-5xl md:text-6xl font-bold mb-6 leading-tight"
-                dangerouslySetInnerHTML={{ __html: data?.hero?.titre_ligne1 || `Vision &bull; Innovation &bull; <br/> <span className="text-amber-500">Réalisation</span>` }}
+                dangerouslySetInnerHTML={{ __html: sanitizeHtml(data?.hero?.titre_ligne1 || `Vision &bull; Innovation &bull; <br/> <span className="text-amber-500">Réalisation</span>`) }}
               />
             </FadeIn>
             <FadeIn delay={0.2}>
               <p 
                 className="text-sm md:text-base opacity-90 mb-12 leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: data?.hero?.sous_titre || `SOGIP Group est une holding guinéenne multisectorielle spécialisée dans la construction, l'immobilier, les énergies renouvelables et la formation professionnelle.<br/><br/>Notre mission est de développer des solutions modernes, durables et accessibles répondant aux besoins des particuliers, des entreprises et des institutions.` }}
+                dangerouslySetInnerHTML={{ __html: sanitizeHtml(data?.hero?.sous_titre || `SOGIP Group est une holding guinéenne multisectorielle spécialisée dans la construction, l'immobilier, les énergies renouvelables et la formation professionnelle.<br/><br/>Notre mission est de développer des solutions modernes, durables et accessibles répondant aux besoins des particuliers, des entreprises et des institutions.`) }}
               />
             </FadeIn>
             <FadeIn delay={0.3} className="flex flex-wrap gap-4">
@@ -216,27 +223,7 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* PARTENAIRES */}
-      <section className="bg-white py-24">
-        <div className="max-w-7xl mx-auto px-6">
-          <FadeIn>
-            <h2 className="title-font text-blue-900 text-4xl font-bold mb-6 text-center capitalize">Nos Partenaires</h2>
-            <p className="text-center text-slate-600 mb-12 max-w-2xl mx-auto">
-              Découvrez les partenaires qui nous accompagnent et participent activement à notre réussite dans chacun de nos secteurs.
-            </p>
-          </FadeIn>
 
-          <FadeIn delay={0.2} className="bg-slate-50 rounded-2xl p-12">
-            <div className="flex flex-wrap justify-center items-center gap-12 opacity-60 grayscale hover:grayscale-0 transition duration-500">
-              {/* Fake Partner Logos */}
-              <div className="text-2xl font-bold title-font text-slate-400">BuildCorp</div>
-              <div className="text-2xl font-bold title-font text-slate-400">EcoSolar</div>
-              <div className="text-2xl font-bold title-font text-slate-400">Capital Immo</div>
-              <div className="text-2xl font-bold title-font text-slate-400">EduTech</div>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
 
       {/* MOT DU PRESIDENT */}
       <section className="bg-slate-100 py-24">
@@ -256,7 +243,7 @@ const Home: React.FC = () => {
             <FadeIn delay={0.2} className="md:col-span-2 bg-white rounded-2xl p-10 shadow-lg relative">
               <div className="absolute top-8 left-8 text-6xl text-amber-200 font-serif leading-none opacity-50">"</div>
               <div className="relative z-10 pl-8 pt-4">
-                <p className="text-slate-700 text-lg leading-relaxed mb-6 italic" dangerouslySetInnerHTML={{ __html: (data?.mot_president?.contenu1 || "Bienvenue chez <strong>SOGIP GROUP</strong>. Depuis plusieurs années, nous accompagnons nos partenaires, nos clients et nos collaborateurs dans leurs projets d'envergure.") + "<br /><br />" + (data?.mot_president?.contenu2 || "Notre objectif est de proposer des solutions concrètes et adaptées, que ce soit pour bâtir les infrastructures de demain, optimiser les investissements immobiliers, réussir la transition énergétique ou former les futurs leaders.") }} />
+                <p className="text-slate-700 text-lg leading-relaxed mb-6 italic" dangerouslySetInnerHTML={{ __html: sanitizeHtml((data?.mot_president?.contenu1 || "Bienvenue chez <strong>SOGIP GROUP</strong>. Depuis plusieurs années, nous accompagnons nos partenaires, nos clients et nos collaborateurs dans leurs projets d'envergure.") + "<br /><br />" + (data?.mot_president?.contenu2 || "Notre objectif est de proposer des solutions concrètes et adaptées, que ce soit pour bâtir les infrastructures de demain, optimiser les investissements immobiliers, réussir la transition énergétique ou former les futurs leaders.")) }} />
                 <div className="border-t border-slate-100 pt-6 mt-6">
                   <h4 className="title-font text-2xl font-bold text-blue-900">{data?.mot_president?.signature || 'Le Président'}</h4>
                   <p className="text-amber-500 font-semibold text-sm uppercase tracking-wider">Directeur Général - SOGIP Group</p>
@@ -266,8 +253,8 @@ const Home: React.FC = () => {
           </div>
         </div>
       </section>
-
-    </div>
+      </div>
+    </>
   );
 };
 

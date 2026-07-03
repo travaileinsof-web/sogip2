@@ -3,6 +3,7 @@ import { Mail, Phone, MapPin } from 'lucide-react';
 import { api } from '../services/api';
 import FadeIn from '../components/animations/FadeIn';
 import { usePageData } from '../hooks/usePageData';
+import { sanitizeHtml } from '../utils/sanitize';
 
 const Contact: React.FC = () => {
   const { data } = usePageData('contact');
@@ -54,7 +55,7 @@ const Contact: React.FC = () => {
           <FadeIn>
             <h1 
               className="title-font text-5xl md:text-6xl font-bold mb-6 text-blue-900 text-center"
-              dangerouslySetInnerHTML={{ __html: data?.hero?.titre || `Entrons en <span className="text-amber-500">Contact</span>` }}
+              dangerouslySetInnerHTML={{ __html: sanitizeHtml(data?.hero?.titre || `Entrons en <span className="text-amber-500">Contact</span>`) }}
             />
             <p className="text-center text-slate-600 max-w-2xl mx-auto text-lg leading-relaxed">
               {data?.hero?.sous_titre || "Une question sur nos services ? Un projet à nous confier ? Notre équipe est à votre écoute pour matérialiser vos ambitions."}
@@ -107,9 +108,14 @@ const Contact: React.FC = () => {
                 </div>
                 <div>
                   <h4 className="text-lg font-bold text-slate-800 mb-1">Email</h4>
-                  <p className="text-slate-600 leading-relaxed">
-                    {data?.info?.email || "contact@sogipgroup.com"}
-                  </p>
+                  <div className="flex flex-col gap-1">
+                    <a href="mailto:camus@sogipgroup.com" className="text-slate-600 hover:text-amber-600 transition-colors">
+                      camus@sogipgroup.com
+                    </a>
+                    <a href="mailto:sogipinfos@sogipgroup.com" className="text-slate-600 hover:text-amber-600 transition-colors">
+                      sogipinfos@sogipgroup.com
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>

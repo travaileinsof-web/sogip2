@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import FadeIn from '../components/animations/FadeIn';
+import FilialesCarousel from '../components/FilialesCarousel';
+import { Helmet } from 'react-helmet-async';
 import { usePageData } from '../hooks/usePageData';
+import { sanitizeHtml } from '../utils/sanitize';
 
 const Services: React.FC = () => {
   const [openServiceId, setOpenServiceId] = useState<string | null>(null);
@@ -12,7 +15,7 @@ const Services: React.FC = () => {
       image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80&w=800",
       title: data?.btp?.titre || 'SOGIP BTP',
       icon: (
-        <img src="/images/logos/sogip_btp_new.jpg" alt="Logo SOGIP BTP" className="h-12 w-auto object-contain" />
+        <img loading="lazy" src="/images/logos/sogip_btp_new.jpg" alt="Logo SOGIP BTP" className="h-12 w-auto object-contain" />
       ),
       desc: data?.btp?.desc || "SOGIP BTP intervient dans la construction de bâtiments, les travaux publics et l'aménagement de bas-fonds avec une approche moderne et durable.",
       items: [
@@ -28,7 +31,7 @@ const Services: React.FC = () => {
       image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80&w=800",
       title: data?.immo?.titre || 'SOGIP IMMO - LePropio',
       icon: (
-        <img src="/images/logos/leproprio.jpg" alt="Logo SOGIP IMMO" className="h-12 w-auto object-contain mix-blend-multiply" />
+        <img loading="lazy" src="/images/logos/leproprio.jpg" alt="Logo SOGIP IMMO" className="h-12 w-auto object-contain mix-blend-multiply" />
       ),
       desc: data?.immo?.desc || "LePropio révolutionne l'immobilier en proposant une vente sans commission, centrée sur les intérêts du client.",
       items: [
@@ -44,7 +47,7 @@ const Services: React.FC = () => {
       image: "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&q=80&w=800",
       title: data?.energie?.titre || 'SOGIP ÉNERGIE - Soleil Guinée',
       icon: (
-        <img src="/images/logos/soleil_guinee_transparent.png" alt="Logo SOGIP ÉNERGIE" className="h-12 w-auto object-contain" />
+        <img loading="lazy" src="/images/logos/soleil_guinee_transparent.png" alt="Logo SOGIP ÉNERGIE" className="h-12 w-auto object-contain" />
       ),
       desc: data?.energie?.desc || "Soleil Guinée accompagne particuliers et entreprises dans leurs projets d'énergies renouvelables grâce à des solutions fiables, économiques et durables.",
       items: [
@@ -61,7 +64,7 @@ const Services: React.FC = () => {
       image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=800",
       title: data?.academy?.titre || 'SOGIP ACADEMY - CEF-CONSEIL',
       icon: (
-        <img src="/images/logos/academie_sogip.jpg" alt="Logo SOGIP ACADEMY" className="h-12 w-auto object-contain mix-blend-multiply" />
+        <img loading="lazy" src="/images/logos/academie_sogip.jpg" alt="Logo SOGIP ACADEMY" className="h-12 w-auto object-contain mix-blend-multiply" />
       ),
       desc: data?.academy?.desc || "SOGIP Academy propose des formations certifiantes en ligne et hybrides adaptées aux réalités du marché professionnel moderne.",
       items: [
@@ -75,11 +78,17 @@ const Services: React.FC = () => {
   ];
 
   return (
-    <div className="w-full bg-white min-h-screen">
+    <>
+      <Helmet>
+        <title>Services & Expertises - SOGIP GROUP</title>
+        <meta name="description" content="Découvrez nos expertises en BTP, Immobilier, Énergies Renouvelables et Formation." />
+      </Helmet>
+      <div className="w-full bg-slate-50 min-h-screen">
       {/* BANNER */}
       <section className="pt-32">
         <div className="relative h-[60vh] min-h-[400px]">
           <img 
+            loading="lazy"
             src="https://images.unsplash.com/photo-1531973576160-7125cd663d86?auto=format&fit=crop&q=80&w=1200" 
             alt="Nos Services" 
             className="absolute inset-0 w-full h-full object-cover" 
@@ -91,7 +100,7 @@ const Services: React.FC = () => {
               <FadeIn>
                 <h1 
                   className="title-font text-5xl md:text-7xl font-bold mb-6 text-white"
-                  dangerouslySetInnerHTML={{ __html: data?.hero?.titre || `Nos <span className="text-amber-500">Expertises</span>` }}
+                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(data?.hero?.titre || `Nos <span className="text-amber-500">Expertises</span>`) }}
                 />
                 <p className="text-lg opacity-90 leading-relaxed text-slate-200">
                   {data?.hero?.sous_titre || "Découvrez l'ensemble de nos pôles d'activités conçus pour répondre à vos exigences les plus élevées en matière de construction, d'immobilier, d'énergie et de formation."}
@@ -145,6 +154,19 @@ const Services: React.FC = () => {
         </div>
       </section>
 
+      {/* FILIALES CAROUSEL */}
+      <section className="py-16 bg-[#0a1628] overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 mb-10">
+          <FadeIn>
+            <h2 className="title-font text-4xl font-bold text-white mb-4 text-center">Nos <span className="text-amber-400">Filiales</span></h2>
+            <p className="text-slate-400 text-center">Cliquez sur une filiale pour découvrir tous ses services en détail</p>
+          </FadeIn>
+        </div>
+        <FilialesCarousel />
+      </section>
+
+
+
       {/* DETAILED SERVICES GRID (Like the slate-200 cards on Anita) */}
       <section className="bg-slate-50 py-24">
         <div className="max-w-7xl mx-auto px-6 text-center">
@@ -192,7 +214,8 @@ const Services: React.FC = () => {
           </div>
         </div>
       </section>
-    </div>
+      </div>
+    </>
   );
 };
 

@@ -1,10 +1,20 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import FadeIn from '../components/animations/FadeIn';
 
 const Formations: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>("Toutes");
   const [selectedCourse, setSelectedCourse] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currency, setCurrency] = useState<'EUR'|'USD'|'FCFA'|'GNF'>('EUR');
+
+  const RATES = { EUR: 1, USD: 1.08, FCFA: 655.957, GNF: 9350 };
+  const SYMBOLS = { EUR: '€', USD: '$', FCFA: 'F CFA', GNF: 'GNF' };
+  const convertPrice = (priceEur: number) => {
+    const converted = priceEur * RATES[currency];
+    const formatted = converted >= 1000 ? Math.round(converted).toLocaleString('fr-FR') : converted.toFixed(0);
+    return `${SYMBOLS[currency]} ${formatted}`;
+  };
 
   // Form State
   const [formData, setFormData] = useState({
@@ -224,118 +234,122 @@ const Formations: React.FC = () => {
   };
 
   return (
-    <div className="pt-32 pb-24 min-h-screen bg-white text-slate-900 selection:bg-amber-500/30 selection:text-amber-900">
-      
-      {/* HEADER SECTION */}
-      <div className="max-w-7xl mx-auto px-6 mb-20 text-center">
-        <FadeIn>
-          <span className="text-amber-500 font-semibold tracking-wider uppercase text-sm mb-4 block">
-            SOGIP ACADEMY by CEF CONSEIL
-          </span>
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 tracking-tight text-slate-900">
-            Formations <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800">Certifiantes</span>
-          </h1>
-          <p className="text-slate-600 max-w-3xl mx-auto text-lg leading-relaxed">
-            Propulsez votre carrière avec nos programmes de formation de pointe, conçus par des experts du terrain et reconnus à l'international.
-          </p>
-        </FadeIn>
-      </div>
+    <>
+      <Helmet>
+        <title>Formations - SOGIP GROUP</title>
+        <meta name="description" content="Développez vos compétences avec SOGIP Academy. Découvrez nos formations professionnelles." />
+      </Helmet>
+      <div className="pt-32 pb-24 min-h-screen bg-white text-slate-900 selection:bg-amber-500/30 selection:text-amber-900">
+        
+        {/* HEADER SECTION */}
+        <div className="max-w-7xl mx-auto px-6 mb-20 text-center">
+          <FadeIn>
+            <span className="text-amber-500 font-semibold tracking-wider uppercase text-sm mb-4 block">
+              SOGIP ACADEMY by CEF CONSEIL
+            </span>
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 tracking-tight text-slate-900">
+              Formations <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800">Certifiantes</span>
+            </h1>
+            <p className="text-slate-600 max-w-3xl mx-auto text-lg leading-relaxed">
+              Propulsez votre carrière avec nos programmes de formation de pointe, conçus par des experts du terrain et reconnus à l'international.
+            </p>
+          </FadeIn>
+        </div>
 
-      {/* FILTER BUTTONS */}
-      <div className="max-w-7xl mx-auto px-6 mb-16">
-        <FadeIn delay={0.1}>
-          <div className="flex flex-wrap justify-center gap-4">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                  activeCategory === cat 
-                  ? 'bg-amber-500 text-slate-900 shadow-[0_0_20px_rgba(245,158,11,0.3)]' 
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200'
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-        </FadeIn>
-      </div>
+        {/* FILTER BUTTONS */}
+        <div className="max-w-7xl mx-auto px-6 mb-16">
+          <FadeIn delay={0.1}>
+            <div className="flex flex-wrap justify-center gap-4">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                    activeCategory === cat 
+                    ? 'bg-amber-500 text-slate-900 shadow-[0_0_20px_rgba(245,158,11,0.3)]' 
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          </FadeIn>
+        </div>
 
-      {/* COURSES LIST */}
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="space-y-16">
-          {filteredFormations.map((section, idx) => (
-            <div key={idx} className="relative">
-              
-              {activeCategory === "Toutes" && (
-                <FadeIn>
-                  <div className="flex items-center gap-4 mb-8">
-                    <h2 className="text-2xl font-bold text-slate-900">{section.category}</h2>
-                    <div className="h-px bg-gradient-to-r from-amber-500/50 to-transparent flex-1"></div>
-                  </div>
-                </FadeIn>
-              )}
+        {/* CURRENCY SWITCHER */}
+        <div className="max-w-7xl mx-auto px-6 mb-10">
+          <FadeIn delay={0.15}>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <span className="text-slate-500 text-sm font-medium">Afficher les prix en :</span>
+              {(['EUR', 'USD', 'FCFA', 'GNF'] as const).map((cur) => (
+                <button
+                  key={cur}
+                  onClick={() => setCurrency(cur)}
+                  className={`px-5 py-1.5 rounded-full text-sm font-bold border transition-all duration-200 ${
+                    currency === cur
+                      ? 'bg-amber-500 border-amber-500 text-slate-900 shadow-lg shadow-amber-200'
+                      : 'bg-white border-slate-200 text-slate-600 hover:border-amber-300 hover:text-amber-600'
+                  }`}
+                >
+                  {cur === 'EUR' ? '€ EUR' : cur === 'USD' ? '$ USD' : cur === 'FCFA' ? 'F CFA' : 'GNF'}
+                </button>
+              ))}
+            </div>
+          </FadeIn>
+        </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {section.courses.map((course, courseIdx) => (
-                  <FadeIn key={courseIdx} delay={courseIdx * 0.05}>
-                    <div className="group h-full bg-blue-900 border border-blue-800 rounded-2xl overflow-hidden transition-all duration-500 hover:bg-blue-800 hover:border-amber-500/50 hover:shadow-[0_0_30px_rgba(245,158,11,0.15)] flex flex-col relative">
-                      
-                      {/* Image Section */}
-                      <div className="relative h-48 overflow-hidden">
-                        <div className="absolute inset-0 bg-slate-900/40 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
-                        <img 
-                          src={course.image} 
-                          alt={course.title}
-                          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
-                        />
-                        <div className="absolute top-4 right-4 z-20">
-                           <span className="inline-flex items-center justify-center px-3 py-1 bg-amber-500/90 backdrop-blur-sm text-slate-900 text-xs font-bold uppercase tracking-wider rounded-full shadow-lg">
-                            {course.duration}
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="p-8 flex flex-col flex-1 relative z-20">
-                        <div className="flex justify-between items-start mb-4">
-                          <h3 className="text-lg font-bold text-white leading-snug group-hover:text-amber-400 transition-colors">
-                            {course.title}
-                          </h3>
-                        </div>
-                        
-                        <p className="text-slate-200 text-sm leading-relaxed mb-8 flex-1">
-                          {course.desc}
-                        </p>
-
-                        <div className="flex items-center justify-between mt-auto">
-                          <div className="flex items-end gap-1">
-                            <span className="text-2xl font-bold text-white">{course.price}</span>
-                            <span className="text-sm text-slate-300 mb-1">€</span>
-                          </div>
-                          <button 
-                            onClick={() => handleOpenModal(course)}
-                            className="px-5 py-2.5 bg-blue-800 hover:bg-amber-500 hover:text-slate-900 border border-blue-700 hover:border-amber-500 text-white rounded-xl font-semibold transition-all duration-300"
-                          >
-                            S'inscrire
-                          </button>
-                        </div>
-                      </div>
+        {/* COURSES LIST */}
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="space-y-16">
+            {filteredFormations.map((section, idx) => (
+              <div key={idx} className="relative">
+                
+                {activeCategory === "Toutes" && (
+                  <FadeIn>
+                    <div className="flex items-center gap-4 mb-8">
+                      <h2 className="text-2xl font-bold text-slate-900">{section.category}</h2>
+                      <div className="h-px bg-gradient-to-r from-amber-500/50 to-transparent flex-1"></div>
                     </div>
                   </FadeIn>
-                ))}
+                )}
+
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {section.courses.map((course, cIdx) => (
+                    <div key={cIdx} className="group bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 hover:border-amber-500/30">
+                      <div className="h-48 overflow-hidden rounded-xl mb-6">
+                        <img src={course.image} alt={course.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      </div>
+                      <h3 className="text-lg font-bold text-slate-900 mb-2 leading-snug min-h-[3.5rem]">{course.title}</h3>
+                      <p className="text-slate-500 text-sm mb-4 line-clamp-2">{course.desc}</p>
+                      <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-100">
+                        <span className="text-sm font-medium text-slate-600">{course.duration}</span>
+                        <span className="text-lg font-bold text-amber-600">
+                          {currency === 'EUR' ? `${course.price} €` : 
+                           currency === 'USD' ? `${Math.round(parseInt(course.price) * 1.1)} $` : 
+                           currency === 'FCFA' ? `${parseInt(course.price) * 655} FCFA` : 
+                           `${parseInt(course.price) * 9000} GNF`}
+                        </span>
+                      </div>
+                      <button 
+                        onClick={() => handleOpenModal(course)}
+                        className="w-full mt-4 py-2.5 rounded-lg border border-amber-500 text-amber-600 font-semibold hover:bg-amber-500 hover:text-white transition-colors"
+                      >
+                        S'inscrire
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* REGISTRATION MODAL */}
       {isModalOpen && selectedCourse && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm" onClick={handleCloseModal}></div>
-          <div className="relative bg-slate-900 border border-amber-500/30 rounded-2xl p-8 max-w-lg w-full shadow-2xl overflow-hidden">
-            {/* Decorative glow */}
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+          <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-sm" onClick={handleCloseModal}></div>
+          <div className="relative bg-slate-900 p-8 rounded-2xl max-w-lg w-full shadow-2xl">
             <div className="absolute top-0 right-0 -mr-16 -mt-16 w-32 h-32 bg-amber-500/20 rounded-full blur-3xl"></div>
             
             <button 
@@ -402,7 +416,7 @@ const Formations: React.FC = () => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

@@ -18,11 +18,7 @@ interface AdminLayoutProps {
 const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAuthenticated, isLoading, logout, checkAuth } = useAuth();
-
-  useEffect(() => {
-    checkAuth();
-  }, []);
+  const { isAuthenticated, isLoading, logout, user } = useAuth();
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -94,10 +90,10 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               <Settings size={20} />
             </button>
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 rounded-full bg-sogip-secondary text-white flex items-center justify-center font-bold">
-                A
+              <div className="w-8 h-8 rounded-full bg-blue-900 text-white flex items-center justify-center font-bold">
+                {user?.prenom?.charAt(0) || 'A'}
               </div>
-              <span className="text-sm font-medium text-gray-700">Administrateur</span>
+              <span className="text-sm font-medium text-gray-700">{user?.prenom || 'Administrateur'} {user?.nom}</span>
             </div>
           </div>
         </header>

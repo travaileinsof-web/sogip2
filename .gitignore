@@ -23,10 +23,12 @@ dist-ssr
 *.sln
 *.sw?
 
+.vercel
 .env
 .env.*
-.gemini
-dist
-
-.vercel
-.env*
+.env.local
+.env.production
+.env.development
+.env.*.local
+database.sqlite
+/sogip-backend/database.sqlite
