@@ -35,7 +35,8 @@ class ApiService {
   }
 
   async get(endpoint: string, params: Record<string, any> = {}) {
-    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    const baseUrl = window.location.origin;
+    const url = new URL(`${API_BASE_URL}${endpoint}`, baseUrl);
     Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
     
     const response = await fetch(url.toString(), {

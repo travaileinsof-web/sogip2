@@ -1,7 +1,10 @@
 import express from 'express';
+import multer from 'multer';
+import fs from 'fs';
+import path from 'path';
 import cors from 'cors';
 import { getDb } from './db/index.js';
-import { users, formations, contacts, media, pages } from './db/schema.js';
+import { users, formations, contacts, media, pages, products, settings } from './db/schema.js';
 import { eq, desc } from 'drizzle-orm';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
@@ -45,6 +48,29 @@ const authenticate = (req: any, res: any, next: any) => {
 
 app.get('/api/v1/ping', (req, res) => res.json({ message: 'pong' }));
 
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const dir = 'public/uploads';
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    cb(null, dir);
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + '-' + file.originalname);
+  }
+});
+const upload = multer({ storage: storage });
+
+app.use('/uploads', express.static('public/uploads'));
+
+app.post('/api/v1/admin/upload', authenticate, upload.single('image'), (req: any, res: any) => {
+  if (!req.file) {
+    return res.status(400).json({ message: 'No file uploaded' });
+  }
+  res.json({ url: `/uploads/${req.file.filename}` });
+});
+
+
 // --- AUTHENTICATION ---
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -56,19 +82,24 @@ const loginLimiter = rateLimit({
 
 app.post('/api/v1/auth/login', loginLimiter, async (req, res) => {
   const { email, password } = req.body;
+  console.log(`[LOGIN ATTEMPT] email: "${email}", password length: ${password?.length}`);
   
   try {
     const user = await getDb().select().from(users).where(eq(users.email, email)).limit(1);
+    console.log(`[LOGIN] User found in DB: ${user.length > 0}`);
     
     if (user.length === 0) {
+      console.log(`[LOGIN] Identifiants incorrects (email introuvable)`);
       return res.status(401).json({ message: 'Identifiants incorrects' });
     }
     
     const isValid = await bcrypt.compare(password, user[0].passwordHash);
+    console.log(`[LOGIN] Password is valid: ${isValid}`);
     if (!isValid) {
       return res.status(401).json({ message: 'Identifiants incorrects' });
     }
     
+    console.log(`[LOGIN] Success for ${email}`);
     const token = jwt.sign(
       { id: user[0].id, email: user[0].email, role: user[0].role }, 
       JWT_SECRET, 
@@ -87,6 +118,50 @@ app.post('/api/v1/auth/login', loginLimiter, async (req, res) => {
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({ message: 'Erreur serveur: ' + (error.message || String(error)) });
+  }
+});
+
+app.get('/api/v1/auth/check', authenticate, (req, res) => {
+  res.json({ success: true, admin: req.user });
+});
+
+app.post('/api/v1/auth/logout', (req, res) => {
+  res.json({ success: true });
+});
+
+// --- PUBLIC ROUTES ---
+app.get('/api/v1/formations', async (req, res) => {
+  try {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+    const result = await getDb().select().from(formations).where(eq(formations.actif, true)).orderBy(desc(formations.createdAt));
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+});
+
+app.get('/api/v1/products', async (req, res) => {
+  try {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+    const result = await getDb().select().from(products).where(eq(products.actif, true)).orderBy(desc(products.createdAt));
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+});
+
+app.get('/api/v1/settings', async (req, res) => {
+  try {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+    const result = await getDb().select().from(settings);
+    // Convert array to object { key: value }
+    const settingsObj = result.reduce((acc, curr) => {
+      acc[curr.key] = curr.value;
+      return acc;
+    }, {} as Record<string, string>);
+    res.json(settingsObj);
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur serveur' });
   }
 });
 
@@ -134,8 +209,9 @@ app.post('/api/v1/admin/formations', authenticate, async (req, res) => {
 
 app.put('/api/v1/admin/formations/:id', authenticate, async (req, res) => {
   try {
+    const { id, createdAt, ...updateData } = req.body;
     const result = await getDb().update(formations)
-      .set(req.body)
+      .set(updateData)
       .where(eq(formations.id, Number(req.params.id)))
       .returning();
     res.json(result[0]);
@@ -265,6 +341,82 @@ app.post('/api/v1/admin/pages/batch', authenticate, async (req, res) => {
         await getDb().update(pages).set({ content: item.content, title: item.title, updatedAt: new Date() }).where(eq(pages.slug, item.slug));
       } else {
         await getDb().insert(pages).values({ slug: item.slug, title: item.title, content: item.content });
+      }
+    }
+    
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur serveur: ' + (error.message || String(error)) });
+  }
+});
+
+// --- PRODUCTS ---
+app.get('/api/v1/admin/products', authenticate, async (req, res) => {
+  try {
+    const result = await getDb().select().from(products).orderBy(desc(products.createdAt));
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur serveur: ' + (error.message || String(error)) });
+  }
+});
+
+app.post('/api/v1/admin/products', authenticate, async (req, res) => {
+  try {
+    const result = await getDb().insert(products).values(req.body).returning();
+    res.json(result[0]);
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur serveur: ' + (error.message || String(error)) });
+  }
+});
+
+app.put('/api/v1/admin/products/:id', authenticate, async (req, res) => {
+  try {
+    const { id, createdAt, ...updateData } = req.body;
+    const result = await getDb().update(products)
+      .set(updateData)
+      .where(eq(products.id, Number(req.params.id)))
+      .returning();
+    res.json(result[0]);
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur serveur: ' + (error.message || String(error)) });
+  }
+});
+
+app.put('/api/v1/admin/products/:id/toggle', authenticate, async (req, res) => {
+  try {
+    const result = await getDb().update(products)
+      .set({ actif: req.body.actif === 1 || req.body.actif === true })
+      .where(eq(products.id, Number(req.params.id)))
+      .returning();
+    res.json(result[0]);
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur serveur: ' + (error.message || String(error)) });
+  }
+});
+
+app.delete('/api/v1/admin/products/:id', authenticate, async (req, res) => {
+  try {
+    await getDb().delete(products).where(eq(products.id, Number(req.params.id)));
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur serveur: ' + (error.message || String(error)) });
+  }
+});
+
+// --- SETTINGS ---
+app.put('/api/v1/admin/settings', authenticate, async (req, res) => {
+  try {
+    // Expecting a body like { "contact_email": "hello@sogip.com", "social_facebook": "..." }
+    const entries = Object.entries(req.body);
+    const db = getDb();
+    
+    // We update each setting individually (upsert pattern logic)
+    for (const [key, value] of entries) {
+      const existing = await db.select().from(settings).where(eq(settings.key, key));
+      if (existing.length > 0) {
+        await db.update(settings).set({ value: String(value), updatedAt: new Date() }).where(eq(settings.key, key));
+      } else {
+        await db.insert(settings).values({ key, value: String(value) });
       }
     }
     

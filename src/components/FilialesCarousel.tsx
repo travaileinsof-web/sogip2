@@ -10,7 +10,6 @@ const filiales = [
     tagline: "L'excellence dans la construction et les travaux publics",
     logo: '/images/logos/sogip_btp_new.jpg',
     accent: '#f59e0b',
-    bg: 'from-amber-900/40 to-slate-900/80',
     icon: '🏗️',
   },
   {
@@ -19,8 +18,7 @@ const filiales = [
     name: 'SOGIP IMMO — LePropio',
     tagline: "L'immobilier transparent, au service de vos ambitions",
     logo: '/images/logos/leproprio.jpg',
-    accent: '#10b981',
-    bg: 'from-emerald-900/40 to-slate-900/80',
+    accent: '#f59e0b',
     icon: '🏠',
   },
   {
@@ -29,8 +27,7 @@ const filiales = [
     name: 'SOGIP ÉNERGIE — Soleil Guinée',
     tagline: "L'énergie solaire, propre et accessible pour tous",
     logo: '/images/logos/soleil_guinee_transparent.png',
-    accent: '#f97316',
-    bg: 'from-orange-900/40 to-slate-900/80',
+    accent: '#f59e0b',
     icon: '☀️',
   },
   {
@@ -39,8 +36,7 @@ const filiales = [
     name: 'CEF CONSEILS',
     tagline: 'Former, Conseiller, Transformer votre avenir professionnel',
     logo: '/images/logos/academie_sogip.jpg',
-    accent: '#6366f1',
-    bg: 'from-indigo-900/40 to-slate-900/80',
+    accent: '#f59e0b',
     icon: '🎓',
   },
 ];
@@ -92,18 +88,17 @@ export default function FilialesCarousel() {
             <motion.div
               whileHover={{ scale: 1.04, y: -6 }}
               transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-              className={`relative rounded-2xl overflow-hidden bg-gradient-to-br ${f.bg} border border-white/10 shadow-2xl h-[220px] flex flex-col justify-between p-6 cursor-pointer`}
-              style={{ boxShadow: `0 0 0 0 ${f.accent}` }}
+              className="relative rounded-2xl overflow-hidden bg-white border border-amber-200 shadow-xl h-[220px] flex flex-col justify-between p-6 cursor-pointer"
+              style={{ boxShadow: `0 4px 20px rgba(245, 158, 11, 0.1)` }}
             >
               {/* Glow on hover */}
               <motion.div
-                className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                style={{ boxShadow: `inset 0 0 60px 0 ${f.accent}33` }}
+                className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-amber-50/50"
               />
 
               {/* Top row: logo + icon */}
-              <div className="flex items-center justify-between">
-                <div className="w-14 h-14 rounded-xl overflow-hidden bg-white/10 flex items-center justify-center shadow-lg">
+              <div className="flex items-center justify-between relative z-10">
+                <div className="w-14 h-14 rounded-xl overflow-hidden bg-white border border-slate-100 flex items-center justify-center shadow-sm">
                   <img
                     src={f.logo}
                     alt={f.name}
@@ -117,16 +112,15 @@ export default function FilialesCarousel() {
               </div>
 
               {/* Name + tagline */}
-              <div>
-                <h3 className="text-white font-bold text-lg title-font leading-tight mb-1">
+              <div className="relative z-10">
+                <h3 className="text-blue-900 font-bold text-lg title-font leading-tight mb-1">
                   {f.name}
                 </h3>
-                <p className="text-slate-300 text-xs leading-relaxed line-clamp-2 mb-3">
+                <p className="text-slate-600 text-xs leading-relaxed line-clamp-2 mb-3">
                   {f.tagline}
                 </p>
                 <span
-                  className="inline-flex items-center gap-1 text-xs font-semibold px-3 py-1 rounded-full transition-all"
-                  style={{ backgroundColor: `${f.accent}22`, color: f.accent, border: `1px solid ${f.accent}44` }}
+                  className="inline-flex items-center gap-1 text-xs font-bold px-4 py-1.5 rounded-full transition-all bg-amber-100 text-amber-600 border border-amber-200"
                 >
                   Découvrir →
                 </span>
@@ -137,8 +131,8 @@ export default function FilialesCarousel() {
       </motion.div>
 
       {/* Fade edges */}
-      <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-[#0a1628] to-transparent pointer-events-none z-10" />
-      <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-[#0a1628] to-transparent pointer-events-none z-10" />
+      <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-blue-900 to-transparent pointer-events-none z-10" />
+      <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-blue-900 to-transparent pointer-events-none z-10" />
     </div>
   );
 }

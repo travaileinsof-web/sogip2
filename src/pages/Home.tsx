@@ -1,11 +1,57 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import { motion, AnimatePresence } from 'framer-motion';
+import PartnersCarousel from '../components/PartnersCarousel';
 import FadeIn from '../components/animations/FadeIn';
 import { usePageData } from '../hooks/usePageData';
 import { sanitizeHtml } from '../utils/sanitize';
 
+const heroImages = [
+  "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=1600",
+  "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80&w=1600",
+  "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&q=80&w=1600",
+  "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80&w=1600",
+  "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=1600"
+];
+
+const HeroCarousel = () => {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % heroImages.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="absolute inset-0 overflow-hidden">
+      <AnimatePresence mode="popLayout">
+        <motion.img
+          key={index}
+          src={heroImages[index]}
+          initial={{ opacity: 0, scale: 1.05 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1.5, ease: "easeInOut" }}
+          className="absolute inset-0 w-full h-full object-cover object-center"
+          alt="SOGIP Hero"
+        />
+      </AnimatePresence>
+      <div className="absolute inset-0 bg-slate-900/60 z-10"></div>
+    </div>
+  );
+};
+
 const Home: React.FC = () => {
+  const [settings, setSettings] = useState<any>({});
+  useEffect(() => {
+    import('../services/api').then(({ api }) => {
+      api.get('/settings').then(res => setSettings(res)).catch(console.error);
+    });
+  }, []);
+
   const { data } = usePageData('home');
 
   return (
@@ -17,19 +63,14 @@ const Home: React.FC = () => {
       <div className="w-full">
       {/* HERO */}
       <section className="relative h-[85vh]">
-        <img 
-          src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=1200" 
-          alt="Hero SOGIP" 
-          className="absolute inset-0 w-full h-[95%] md:h-full object-cover object-center" 
-        />
-        <div className="absolute inset-0 bg-slate-900/50"></div>
-
-        <div className="relative max-w-7xl mx-auto h-full flex items-center px-6">
+        <HeroCarousel />
+        
+        <div className="relative z-20 max-w-7xl mx-auto h-full flex items-center px-6">
           <div className="max-w-2xl text-white">
             <FadeIn delay={0.1}>
               <h1 
                 className="title-font text-5xl md:text-6xl font-bold mb-6 leading-tight"
-                dangerouslySetInnerHTML={{ __html: sanitizeHtml(data?.hero?.titre_ligne1 || `Vision &bull; Innovation &bull; <br/> <span className="text-amber-500">Réalisation</span>`) }}
+                dangerouslySetInnerHTML={{ __html: sanitizeHtml(data?.hero?.titre_ligne1 || `Bâtir l'Avenir, Transformer les<br/><span className="text-amber-500">Visions en Réalité</span>`) }}
               />
             </FadeIn>
             <FadeIn delay={0.2}>
@@ -45,18 +86,18 @@ const Home: React.FC = () => {
               >
                 En savoir plus →
               </Link>
-                <Link 
-                  to="/services"
-                  className="px-6 py-3 border-2 border-amber-500 text-amber-500 font-semibold rounded-full hover:bg-amber-500 hover:text-white transition shadow-lg bg-slate-900/40 backdrop-blur-sm"
-                >
-                  Nos services
-                </Link>
-                <Link 
-                  to="/formations"
-                  className="px-6 py-3 bg-amber-500 text-white font-semibold rounded-full hover:bg-amber-400 transition shadow-[0_0_20px_rgba(245,158,11,0.4)]"
-                >
-                  Découvrir nos formations
-                </Link>
+              <Link 
+                to="/boutique"
+                className="px-6 py-3 border-2 border-amber-500 text-amber-500 font-semibold rounded-full hover:bg-amber-500 hover:text-white transition shadow-lg bg-slate-900/40 backdrop-blur-sm"
+              >
+                Découvrir nos produits
+              </Link>
+              <Link 
+                to="/formations"
+                className="px-6 py-3 bg-amber-500 text-white font-semibold rounded-full hover:bg-amber-400 transition shadow-[0_0_20px_rgba(245,158,11,0.4)]"
+              >
+                Découvrir nos formations
+              </Link>
             </FadeIn>
           </div>
         </div>
@@ -130,12 +171,18 @@ const Home: React.FC = () => {
             </p>
           </FadeIn>
           
-                    <FadeIn delay={0.2} className="flex justify-center gap-6 mt-8">
+            <FadeIn delay={0.2} className="flex flex-wrap justify-center gap-6 mt-8">
               <Link 
                 to="/services" 
-                className="px-8 py-4 bg-transparent border-2 border-amber-500 text-amber-500 font-bold rounded-full hover:bg-amber-500 hover:text-white transition shadow-lg text-lg"
+                className="px-8 py-4 bg-transparent border-2 border-white text-white font-bold rounded-full hover:bg-white hover:text-blue-900 transition shadow-lg text-lg"
               >
                 Découvrir nos filiales →
+              </Link>
+              <Link 
+                to="/boutique" 
+                className="px-8 py-4 bg-transparent border-2 border-amber-500 text-amber-500 font-bold rounded-full hover:bg-amber-500 hover:text-white transition shadow-lg text-lg"
+              >
+                Découvrir nos produits (Solaire) →
               </Link>
               <Link 
                 to="/formations" 
@@ -203,6 +250,9 @@ const Home: React.FC = () => {
         </div>
       </section>
 
+      {/* PARTENAIRES */}
+      <PartnersCarousel />
+
       {/* CHIFFRES CLES (BANNER) */}
       <section className="bg-gradient-to-r from-amber-500 to-amber-600">
         <div className="max-w-7xl mx-auto px-6 py-16 text-center text-white">
@@ -235,7 +285,7 @@ const Home: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-center">
             <FadeIn delay={0.1} className="md:col-span-1 rounded-2xl overflow-hidden shadow-luxury h-full min-h-[300px] bg-slate-50 flex items-center justify-center">
               <img 
-                src="/images/fondateur.jpg" 
+                src={settings.photo_directeur || "/images/fondateur.jpg"} 
                 alt="Direction SOGIP"
                 className="w-full h-full object-contain"
               />

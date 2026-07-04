@@ -48,3 +48,20 @@ export const pages = pgTable('pages', {
   content: text('content').notNull(), // JSON stringified content
   updatedAt: timestamp('updated_at').defaultNow()
 });
+
+export const products = pgTable('products', {
+  id: serial('id').primaryKey(),
+  title: varchar('title', { length: 255 }).notNull(),
+  category: varchar('category', { length: 255 }).notNull(),
+  price: integer('price').notNull(),
+  description: text('description').notNull(),
+  image: text('image').notNull(),
+  actif: boolean('actif').default(true),
+  createdAt: timestamp('created_at').defaultNow()
+});
+
+export const settings = pgTable('settings', {
+  key: varchar('key', { length: 255 }).primaryKey(),
+  value: text('value').notNull(), // JSON stringified value or plain text
+  updatedAt: timestamp('updated_at').defaultNow()
+});

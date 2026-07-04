@@ -1,5 +1,27 @@
+import { Link } from 'react-router-dom';
 import FilialePage from './FilialeLayout';
+import FadeIn from '../../components/animations/FadeIn';
 
+const ProduitsSection = () => (
+  <section className="bg-orange-50 py-24 border-y border-orange-100">
+    <div className="max-w-7xl mx-auto px-6 text-center">
+      <FadeIn>
+        <h2 className="title-font text-4xl font-bold text-slate-800 mb-6">
+          Nos Équipements & Produits Solaires
+        </h2>
+        <p className="text-slate-600 max-w-2xl mx-auto text-lg mb-12">
+          Découvrez notre gamme complète d'équipements solaires (panneaux, onduleurs, batteries) de haute qualité pour vos projets d'énergie renouvelable.
+        </p>
+        <Link
+          to="/boutique"
+          className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold text-white bg-orange-500 hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/30 text-lg"
+        >
+          Découvrir nos produits →
+        </Link>
+      </FadeIn>
+    </div>
+  </section>
+);
 const HERO = {
   image: 'https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&q=80&w=1200',
   logo: '/images/logos/soleil_guinee_transparent.png',
@@ -109,6 +131,7 @@ export default function SogipEnergie() {
       intro="Soleil Guinée est la filiale énergie du Groupe SOGIP, dédiée au développement des énergies renouvelables en Guinée et dans la sous-région. Face aux défis énergétiques actuels, nous proposons des solutions solaires clé en main, économiques et durables, adaptées aussi bien aux ménages qu'aux entreprises et institutions."
       services={SERVICES}
       whyUs={WHY_US}
+      extra={<ProduitsSection />}
     />
   );
 }

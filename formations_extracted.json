@@ -1,0 +1,174 @@
+[
+    {
+      category: "Génie Civil, BTP & Infrastructures",
+      courses: [
+        { 
+          title: "CONCEPTION, CALCULS ET DIMENSIONNEMENT DES STRUCTURES AVANCÉES DES BÂTIMENTS", 
+          duration: "2 mois", 
+          price: "500", 
+          desc: "Maîtrisez la conception et le dimensionnement avancé des structures de bâtiments en intégrant les calculs statiques, dynamiques et parasismiques.",
+          image: "/images/formations/btp.jpg"
+        },
+        { 
+          title: "GESTION DE PROJETS BTP – PLANIFICATION, BUDGÉTISATION, SUIVI ET CONTRÔLE DES COÛTS", 
+          duration: "2 mois", 
+          price: "490", 
+          desc: "Planification de projets BTP, budgétisation, contrôle des coûts et analyse.",
+          image: "/images/formations/management.jpg"
+        },
+        { 
+          title: "CONCEPTION ET RÉALISATION DES OUVRAGES D’ART (PONTS)", 
+          duration: "2 mois", 
+          price: "500", 
+          desc: "Cycle complet de conception et de réalisation des ouvrages d’art, de l’étude préliminaire jusqu’au dimensionnement.",
+          image: "/images/formations/digital.jpg"
+        },
+        { 
+          title: "MAÎTRISE DE LA GÉOTECHNIQUE : ANALYSE DES SOLS ET DIMENSIONNEMENT DES FONDATIONS", 
+          duration: "2 mois", 
+          price: "499", 
+          desc: "Comprendre en profondeur le comportement des sols et assurer le dimensionnement optimal des fondations.",
+          image: "/images/formations/qhse.jpg"
+        },
+        { 
+          title: "CONCEPTION ET DIMENSIONNEMENT DE LA VOIRIE URBAINE-V.R.D", 
+          duration: "2 mois", 
+          price: "490", 
+          desc: "Aménagement urbain moderne dédié à la conception et au dimensionnement de la voirie urbaine.",
+          image: "/images/formations/btp.jpg"
+        },
+        { 
+          title: "BIM AVANCÉ : MODÉLISATION, COORDINATION & GESTION DE PROJETS", 
+          duration: "2 mois", 
+          price: "499", 
+          desc: "Plongez au cœur de la révolution numérique du secteur du bâtiment grâce au Building Information Modeling (BIM).",
+          image: "/images/formations/management.jpg"
+        },
+        { 
+          title: "CONCEPTION, DIMENSIONNEMENT ET RÉALISATION DES INFRASTRUCTURES ROUTIÈRES AVANCÉES", 
+          duration: "2 mois", 
+          price: "490", 
+          desc: "Ingénierie routière moderne de A à Z : conception, dimensionnement et réalisation.",
+          image: "/images/formations/digital.jpg"
+        }
+      ]
+    },
+    {
+      category: "Mines & Géologie",
+      courses: [
+        { 
+          title: "SUPERVISEUR MINIER 4.0 : LEADERSHIP OPÉRATIONNEL & INTELLIGENCE ARTIFICIELLE APPLIQUÉE", 
+          duration: "2 mois", 
+          price: "500", 
+          desc: "Maîtriser les leviers critiques de la performance minière (leadership opérationnel et IA).",
+          image: "/images/formations/qhse.jpg"
+        },
+        { 
+          title: "GESTION INTÉGRÉE DES PROJETS MINIERS DE LA PROSPECTION À L'EXPLOITATION", 
+          duration: "2 mois", 
+          price: "490", 
+          desc: "Maîtriser l’ensemble du cycle de vie d’un projet minier, de la découverte d’un gisement jusqu’à sa mise en exploitation.",
+          image: "/images/formations/btp.jpg"
+        },
+        { 
+          title: "MODELISATION 3D APPLIQUÉE À LA GÉOLOGIE MINIÈRE & GÉOTECHNIQUE", 
+          duration: "1 mois", 
+          price: "550", 
+          desc: "Transformer des données géologiques et géotechniques complexes en modèles numériques.",
+          image: "/images/formations/management.jpg"
+        }
+      ]
+    },
+    {
+      category: "Eau, Environnement & SIG",
+      courses: [
+        { 
+          title: "MODÉLISATION HYDRO GÉOPHYSIQUE ET HYDROGÉOLOGIQUE DES AQUIFÈRES", 
+          duration: "2 mois", 
+          price: "490", 
+          desc: "Maîtriser les outils et méthodes avancés de modélisation des aquifères.",
+          image: "/images/formations/digital.jpg"
+        },
+        { 
+          title: "ASSAINISSEMENT: GESTION DURABLE DES EAUX USÉES ET PLUVIALES", 
+          duration: "2 mois", 
+          price: "490", 
+          desc: "Dimensionnement, modélisation et optimisation des réseaux.",
+          image: "/images/formations/qhse.jpg"
+        },
+        { 
+          title: "MODÉLISATION HYDRAULIQUE 2D SOUS LES LOGICIELS (HEC-RAS)", 
+          duration: "2 mois", 
+          price: "490", 
+          desc: "Simulation hydraulique avancée pour anticiper les risques liés aux inondations.",
+          image: "/images/formations/btp.jpg"
+        },
+        { 
+          title: "SIG ET TÉLÉDÉTECTION SPATIALE – MÉTHODES AVANCÉES SOUS ENVI", 
+          duration: "2 mois", 
+          price: "490", 
+          desc: "Maîtriser les techniques modernes d’analyse et d’exploitation des images satellites.",
+          image: "/images/formations/management.jpg"
+        }
+      ]
+    },
+    {
+      category: "Management, Ressources Humaines & Audit",
+      courses: [
+        { 
+          title: "MANAGEMENT DES RESSOURCES HUMAINES APPLIQUÉ", 
+          duration: "2 mois", 
+          price: "350", 
+          desc: "Maîtriser les leviers stratégiques du management RH, de la gestion des talents et du leadership.",
+          image: "/images/formations/digital.jpg"
+        },
+        { 
+          title: "AUDIT INTERNE PRÉPARATION À LA CERTIFICATION CIA", 
+          duration: "2 mois", 
+          price: "499", 
+          desc: "Expertise avancée en maîtrise des normes internationales IIA et COSO, et contrôle interne.",
+          image: "/images/formations/qhse.jpg"
+        },
+        { 
+          title: "GESTION DES MARCHÉS PUBLICS ET APPELS D'OFFRES", 
+          duration: "2 mois", 
+          price: "490", 
+          desc: "Maîtrise complète du cycle de la commande publique (de l'identification du besoin à l'exécution).",
+          image: "/images/formations/btp.jpg"
+        },
+        { 
+          title: "AUDIT SOCIAL ET EFFICACITÉ ORGANISATIONNELLE", 
+          duration: "1 mois", 
+          price: "490", 
+          desc: "Évaluation des politiques RH, analyse du climat social et maîtrise des risques sociaux.",
+          image: "/images/formations/management.jpg"
+        }
+      ]
+    },
+    {
+      category: "Qualité & HSE",
+      courses: [
+        { 
+          title: "MANAGER HSE STRATÉGIE, PERFORMANCE & LEADERSHIP SAFETY", 
+          duration: "2 mois", 
+          price: "490", 
+          desc: "Pilotage HSE, performance opérationnelle, conformité réglementaire et excellence.",
+          image: "/images/formations/digital.jpg"
+        },
+        { 
+          title: "FORMATION SUPERVISEUR HSE – MAÎTRISE DES RISQUES & MANAGEMENT INTÉGRÉ", 
+          duration: "2 mois", 
+          price: "490", 
+          desc: "Outils essentiels de maîtrise des risques dans les secteurs industriels, miniers, BTP.",
+          image: "/images/formations/qhse.jpg"
+        },
+        { 
+          title: "SYSTÈME DE MANAGEMENT DE LA QUALITÉ (SMQ) — ISO 9001", 
+          duration: "2 mois", 
+          price: "490", 
+          desc: "Performance organisationnelle dédiée au Système de Management de la Qualité.",
+          image: "/images/formations/btp.jpg"
+        }
+      ]
+    }
+  ]

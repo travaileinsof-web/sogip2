@@ -7,7 +7,8 @@ import {
   MessageSquare, 
   GraduationCap, 
   LogOut,
-  Settings
+  Settings,
+  ShoppingBag
 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -32,9 +33,9 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
   const navItems = [
     { name: 'Tableau de bord', path: '/admin/dashboard', icon: <LayoutDashboard size={20} /> },
-    { name: 'Pages', path: '/admin/pages', icon: <FileText size={20} /> },
-    { name: 'Médias', path: '/admin/media', icon: <ImageIcon size={20} /> },
-    { name: 'Formations', path: '/admin/trainings', icon: <GraduationCap size={20} /> },
+    { name: 'Paramètres', path: '/admin/settings', icon: <Settings size={20} /> },
+    { name: 'Formations', path: '/admin/formations', icon: <GraduationCap size={20} /> },
+    { name: 'Produits (Soleil)', path: '/admin/products', icon: <ShoppingBag size={20} /> },
     { name: 'Messages', path: '/admin/contacts', icon: <MessageSquare size={20} /> },
   ];
 

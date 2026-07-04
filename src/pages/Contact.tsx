@@ -1,12 +1,38 @@
-import React, { useState } from 'react';
-import { Mail, Phone, MapPin } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { MapPin, Phone, Mail, Send } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 import { api } from '../services/api';
 import FadeIn from '../components/animations/FadeIn';
 import { usePageData } from '../hooks/usePageData';
 import { sanitizeHtml } from '../utils/sanitize';
 
+const parseArray = (str: any, defaultArr: any[]) => {
+  if (!str) return defaultArr;
+  try {
+    const parsed = JSON.parse(str);
+    return Array.isArray(parsed) ? parsed : [str];
+  } catch {
+    return [str];
+  }
+};
+
 const Contact: React.FC = () => {
-  const { data } = usePageData('contact');
+  const [settings, setSettings] = useState<any>({});
+  useEffect(() => {
+    import('../services/api').then(({ api }) => {
+      api.get('/settings').then(res => setSettings(res)).catch(console.error);
+    });
+  }, []);
+
+  
+  const emails = parseArray(settings.contact_emails || settings.contact_email, ['camus@sogipgroup.com', 'sogipinfos@sogipgroup.com']);
+  const phones = parseArray(settings.contact_phones || settings.contact_phone, ['+224 620 52 12 49']);
+  const socials = parseArray(settings.socials, [
+    { platform: 'Facebook', url: settings.social_facebook || data?.info?.facebook || "https://facebook.com/SogipGroup" },
+    { platform: 'LinkedIn', url: settings.social_linkedin || data?.info?.linkedin || "https://linkedin.com/company/sogipgroup" },
+    { platform: 'TikTok', url: settings.social_tiktok || data?.info?.tiktok || "https://tiktok.com/@sogipgroup" }
+  ]).filter((s: any) => s.url);
+const { data } = usePageData('contact');
   const [formState, setFormState] = useState({
     nom: '',
     prenom: '',
@@ -85,7 +111,7 @@ const Contact: React.FC = () => {
                 <div>
                   <h4 className="text-lg font-bold text-slate-800 mb-1">Siège Social</h4>
                   <p className="text-slate-600 leading-relaxed">
-                    {data?.info?.adresse || "Bluezone de Dixinn, Conakry, Guinée"}
+                    {settings.contact_address || data?.info?.adresse || "Bluezone de Dixinn, Conakry, Guinée"}
                   </p>
                 </div>
               </div>
@@ -96,9 +122,11 @@ const Contact: React.FC = () => {
                 </div>
                 <div>
                   <h4 className="text-lg font-bold text-slate-800 mb-1">Téléphone</h4>
-                  <p className="text-slate-600 leading-relaxed">
-                    {data?.info?.telephone || "+224 620 52 12 49"}
-                  </p>
+<div className="flex flex-col gap-1">
+  {phones.map((phone: string, i: number) => (
+    <p key={i} className="text-slate-600 leading-relaxed">{phone}</p>
+  ))}
+</div>
                 </div>
               </div>
 
@@ -108,18 +136,38 @@ const Contact: React.FC = () => {
                 </div>
                 <div>
                   <h4 className="text-lg font-bold text-slate-800 mb-1">Email</h4>
-                  <div className="flex flex-col gap-1">
-                    <a href="mailto:camus@sogipgroup.com" className="text-slate-600 hover:text-amber-600 transition-colors">
-                      camus@sogipgroup.com
+<div className="flex flex-col gap-1">
+  {emails.map((email: string, i: number) => (
+    <a key={i} href={`mailto:${email}`} className="text-slate-600 hover:text-amber-600 transition-colors">
+      {email}
+    </a>
+  ))}
+</div>
+                </div>
+              </div>
+
+              {/* Réseaux Sociaux */}
+              <div className="flex items-start gap-4 pt-6 border-t border-slate-100">
+                
+                <div className="flex gap-4">
+                  {socials.map((social: any, i: number) => (
+                    <a key={i} href={social.url} target="_blank" rel="noopener noreferrer" aria-label={social.platform} title={social.platform} className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-blue-600 hover:text-white transition-colors">
+                      {social.platform.toLowerCase().includes('facebook') ? (
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                      ) : social.platform.toLowerCase().includes('linkedin') ? (
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                      ) : social.platform.toLowerCase().includes('tiktok') ? (
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
+                      ) : (
+                        <span className="font-bold">{social.platform.substring(0, 1).toUpperCase()}</span>
+                      )}
                     </a>
-                    <a href="mailto:sogipinfos@sogipgroup.com" className="text-slate-600 hover:text-amber-600 transition-colors">
-                      sogipinfos@sogipgroup.com
-                    </a>
-                  </div>
+                  ))}
                 </div>
               </div>
             </div>
           </FadeIn>
+
 
           {/* Formulaire */}
           <FadeIn delay={0.2}>

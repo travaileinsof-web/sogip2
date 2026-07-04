@@ -26,8 +26,8 @@ const AdminLogin: React.FC = () => {
     try {
       const response = await api.post('/auth/login', { email, password });
       
-      if (response.success) {
-        login(response.token, response.admin);
+      if (response.token) {
+        login(response.token, response.user);
         navigate('/admin/dashboard');
       } else {
         setError(response.message || 'Identifiants incorrects');

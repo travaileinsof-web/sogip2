@@ -4,6 +4,13 @@ import { Helmet } from 'react-helmet-async';
 import { usePageData } from '../hooks/usePageData';
 import { sanitizeHtml } from '../utils/sanitize';
 const About: React.FC = () => {
+  const [settings, setSettings] = useState<any>({});
+  useEffect(() => {
+    import('../services/api').then(({ api }) => {
+      api.get('/settings').then(res => setSettings(res)).catch(console.error);
+    });
+  }, []);
+
   const { data } = usePageData('about');
 
   return (
@@ -48,7 +55,7 @@ const About: React.FC = () => {
 
             <FadeIn delay={0.2} className="relative h-[500px] rounded-2xl overflow-hidden shadow-luxury bg-slate-50 flex items-center justify-center">
               <img 
-                src="/images/fondateur2.jpg" 
+                src={settings.photo_fondateur || "/images/fondateur2.jpg"} 
                 alt="Amara Camara - Fondateur" 
                 className="w-full h-full object-contain" 
               />

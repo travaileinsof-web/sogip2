@@ -111,9 +111,9 @@ const FormationsSection = () => (
         <div className="text-center">
           <Link
             to="/formations"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold text-white bg-indigo-600 hover:bg-indigo-500 transition-colors shadow-lg shadow-indigo-900/50"
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold text-white bg-indigo-600 hover:bg-indigo-500 transition-colors shadow-lg shadow-indigo-900/50 text-lg"
           >
-            Voir toutes nos formations →
+            Découvrir nos formations →
           </Link>
         </div>
       </FadeIn>

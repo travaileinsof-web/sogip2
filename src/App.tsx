@@ -18,7 +18,9 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminPages from './pages/admin/AdminPages';
 import AdminMedia from './pages/admin/AdminMedia';
 import AdminContacts from './pages/admin/AdminContacts';
-import AdminTrainings from './pages/admin/AdminTrainings';
+import AdminFormations from './pages/admin/AdminFormations';
+import AdminProducts from './pages/admin/AdminProducts';
+import AdminSettings from './pages/admin/AdminSettings';
 
 import SogipBtp from './pages/filiales/SogipBtp';
 import SogipImmo from './pages/filiales/SogipImmo';
@@ -60,7 +62,9 @@ const AnimatedRoutes = () => {
         <Route path="/admin/pages" element={<PrivateRoute><AdminPages /></PrivateRoute>} />
         <Route path="/admin/media" element={<PrivateRoute><AdminMedia /></PrivateRoute>} />
         <Route path="/admin/contacts" element={<PrivateRoute><AdminContacts /></PrivateRoute>} />
-        <Route path="/admin/trainings" element={<PrivateRoute><AdminTrainings /></PrivateRoute>} />
+        <Route path="/admin/formations" element={<PrivateRoute><AdminFormations /></PrivateRoute>} />
+        <Route path="/admin/products" element={<PrivateRoute><AdminProducts /></PrivateRoute>} />
+        <Route path="/admin/settings" element={<PrivateRoute><AdminSettings /></PrivateRoute>} />
         <Route path="*" element={<Layout><NotFound /></Layout>} />
       </Routes>
     </AnimatePresence>

@@ -155,11 +155,11 @@ const Services: React.FC = () => {
       </section>
 
       {/* FILIALES CAROUSEL */}
-      <section className="py-16 bg-[#0a1628] overflow-hidden">
+      <section className="py-16 bg-blue-900 overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 mb-10">
           <FadeIn>
             <h2 className="title-font text-4xl font-bold text-white mb-4 text-center">Nos <span className="text-amber-400">Filiales</span></h2>
-            <p className="text-slate-400 text-center">Cliquez sur une filiale pour découvrir tous ses services en détail</p>
+            <p className="text-blue-100 text-center">Cliquez sur une filiale pour découvrir tous ses services en détail</p>
           </FadeIn>
         </div>
         <FilialesCarousel />

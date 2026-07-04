@@ -19,9 +19,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const navLinks = [
     { name: 'Accueil', path: '/' },
     { name: 'À propos', path: '/about' },
-    { name: 'Services', path: '/services' },
-    { name: 'Formations', path: '/formations' },
-    { name: 'Produits', path: '/boutique' },
+    { 
+      name: 'Nos filiales', 
+      path: '/services',
+      subLinks: [
+        { name: 'Sogip BTP', path: '/services/btp' },
+        { name: 'Sogip Immo (Le Proprio)', path: '/services/immo' },
+        { name: 'Soleil Guinée', path: '/services/energie' },
+        { name: 'CEF Conseils (Académie)', path: '/services/cef-conseils' }
+      ]
+    },
     { name: 'Contact', path: '/contact' }
   ];
 
@@ -39,13 +46,33 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <nav className="hidden md:flex gap-8 text-sm font-medium">
             <ul className="flex items-center gap-8">
               {navLinks.map((link) => (
-                <li key={link.name}>
-                  <Link 
-                    to={link.path} 
-                    className={`transition hover:text-amber-500 ${location.pathname === link.path ? 'text-amber-500' : 'text-slate-800'}`}
-                  >
-                    {link.name}
-                  </Link>
+                <li key={link.name} className={link.subLinks ? 'relative group' : ''}>
+                  {link.subLinks ? (
+                    <>
+                      <Link to={link.path} className={`cursor-pointer transition flex items-center gap-1 hover:text-amber-500 ${location.pathname.startsWith('/services') ? 'text-amber-500' : 'text-slate-800'}`}>
+                        {link.name}
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                      </Link>
+                      <div className="absolute top-full left-0 mt-4 w-56 bg-white shadow-luxury border border-slate-100 rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:mt-2 transition-all duration-300 py-2 flex flex-col z-50">
+                        {link.subLinks.map(sub => (
+                          <Link 
+                            key={sub.name}
+                            to={sub.path}
+                            className="px-4 py-2 text-slate-600 hover:text-amber-500 hover:bg-slate-50 transition-colors"
+                          >
+                            {sub.name}
+                          </Link>
+                        ))}
+                      </div>
+                    </>
+                  ) : (
+                    <Link 
+                      to={link.path} 
+                      className={`transition hover:text-amber-500 ${location.pathname === link.path ? 'text-amber-500' : 'text-slate-800'}`}
+                    >
+                      {link.name}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
@@ -74,13 +101,33 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <div className={`absolute top-full left-0 w-full bg-white shadow-lg border-t border-slate-100 p-6 flex flex-col gap-6 md:hidden transition-all duration-300 origin-top ${isMenuOpen ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0 h-0 p-0 overflow-hidden'}`}>
           <nav className="flex flex-col gap-4 text-base font-medium">
             {navLinks.map((link) => (
-              <Link 
-                key={link.name}
-                to={link.path} 
-                className={`mobile-link transition py-2 border-b border-slate-50 hover:text-amber-500 ${location.pathname === link.path ? 'text-amber-500' : 'text-slate-800'}`}
-              >
-                {link.name}
-              </Link>
+              <div key={link.name} className="flex flex-col">
+                {link.subLinks ? (
+                  <>
+                    <Link to={link.path} className={`mobile-link block py-2 border-b border-slate-50 font-bold hover:text-amber-500 ${location.pathname === link.path ? 'text-amber-500' : 'text-slate-800'}`}>
+                      {link.name}
+                    </Link>
+                    <div className="flex flex-col pl-4 mt-2 gap-2 border-l-2 border-amber-500/20">
+                      {link.subLinks.map(sub => (
+                        <Link 
+                          key={sub.name}
+                          to={sub.path} 
+                          className={`mobile-link transition py-1 text-sm hover:text-amber-500 ${location.pathname === sub.path ? 'text-amber-500' : 'text-slate-600'}`}
+                        >
+                          {sub.name}
+                        </Link>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <Link 
+                    to={link.path} 
+                    className={`mobile-link transition py-2 border-b border-slate-50 hover:text-amber-500 ${location.pathname === link.path ? 'text-amber-500' : 'text-slate-800'}`}
+                  >
+                    {link.name}
+                  </Link>
+                )}
+              </div>
             ))}
           </nav>
           <Link 
@@ -124,18 +171,18 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold text-lg mb-4 text-amber-500">Réseaux</h4>
-            <ul className="space-y-2 text-sm text-slate-400">
-              {contactData?.info?.linkedin && (
-                <li><a href={contactData.info.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-amber-500 transition">LinkedIn</a></li>
-              )}
-              {contactData?.info?.facebook && (
-                <li><a href={contactData.info.facebook} target="_blank" rel="noopener noreferrer" className="hover:text-amber-500 transition">Facebook</a></li>
-              )}
-              {(!contactData?.info?.linkedin && !contactData?.info?.facebook) && (
-                <li className="italic opacity-50">Aucun réseau pour le moment</li>
-              )}
-            </ul>
+            <h4 className="font-semibold text-lg mb-4 text-amber-500">Réseaux Sociaux</h4>
+            <div className="flex gap-4">
+              <a href={contactData?.info?.facebook || "https://facebook.com/SogipGroup"} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="bg-slate-800 p-2 rounded-full hover:bg-amber-500 hover:text-white transition-colors text-slate-400">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+              </a>
+              <a href={contactData?.info?.linkedin || "https://linkedin.com/company/sogipgroup"} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="bg-slate-800 p-2 rounded-full hover:bg-amber-500 hover:text-white transition-colors text-slate-400">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+              </a>
+              <a href={contactData?.info?.tiktok || "https://tiktok.com/@sogipgroup"} target="_blank" rel="noopener noreferrer" aria-label="TikTok" className="bg-slate-800 p-2 rounded-full hover:bg-amber-500 hover:text-white transition-colors text-slate-400">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
+              </a>
+            </div>
           </div>
         </div>
         <div className="max-w-7xl mx-auto px-6 mt-12 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center text-sm text-slate-500">

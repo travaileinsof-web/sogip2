@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import FadeIn from '../components/animations/FadeIn';
 
 const Boutique: React.FC = () => {
+  const [currency, setCurrency] = useState('GNF');
+  const RATES: Record<string, number> = { EUR: 1, USD: 1.08, FCFA: 655, GNF: 9300 };
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -60,14 +63,29 @@ const Boutique: React.FC = () => {
           <span className="text-amber-500 font-semibold tracking-wider uppercase text-sm mb-4 block">
             Soleil Guinée - Énergies Renouvelables
           </span>
+          
           <h1 className="text-5xl md:text-6xl font-bold mb-6 tracking-tight text-slate-900">
             Nos <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600">Produits</span>
           </h1>
-          <p className="text-slate-600 max-w-3xl mx-auto text-lg leading-relaxed">
+          <p className="text-slate-600 max-w-3xl mx-auto text-lg leading-relaxed mb-8">
             Découvrez nos équipements d'énergies renouvelables ultra-qualitatifs pour répondre à tous vos besoins en autonomie énergétique.
           </p>
+          <div className="flex items-center justify-center gap-3">
+            <span className="text-slate-500 font-medium">Afficher les prix en :</span>
+            <select 
+              value={currency} 
+              onChange={(e) => setCurrency(e.target.value)}
+              className="bg-white border border-slate-200 text-slate-700 font-bold py-2 px-4 rounded-lg focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 cursor-pointer shadow-sm"
+            >
+              <option value="EUR">€ EUR</option>
+              <option value="USD">$ USD</option>
+              <option value="FCFA">FCFA</option>
+              <option value="GNF">GNF</option>
+            </select>
+          </div>
         </FadeIn>
       </div>
+
 
       <div className="max-w-7xl mx-auto px-6 mb-24">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -88,9 +106,19 @@ const Boutique: React.FC = () => {
                   </div>
                 </div>
                 <div className="p-8 flex flex-col flex-1 relative z-20">
-                  <h3 className="text-xl font-bold text-slate-900 leading-snug mb-4 group-hover:text-amber-500 transition-colors">
+                  
+                  <h3 className="text-xl font-bold text-slate-900 leading-snug mb-2 group-hover:text-amber-500 transition-colors">
                     {product.title}
                   </h3>
+                  <div className="mb-4 text-lg font-extrabold text-amber-600">
+                    {product.price ? (
+                      currency === 'EUR' ? `${product.price} €` : 
+                      currency === 'USD' ? `${Math.round(product.price * RATES.USD)} $` : 
+                      currency === 'FCFA' ? `${product.price * RATES.FCFA} FCFA` : 
+                      `${product.price * RATES.GNF} GNF`
+                    ) : 'Prix sur demande'}
+                  </div>
+
                   <p className="text-slate-600 text-sm leading-relaxed mb-6 flex-1">
                     {product.desc}
                   </p>

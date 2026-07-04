@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { api } from '../services/api';
 
 interface PageContentItem {
@@ -21,7 +21,7 @@ export const usePageData = (pageName: string) => {
   );
   const [loading, setLoading] = useState<boolean>(!pageCache[pageName]);
   const [error, setError] = useState<string | null>(null);
-  const hasFetched = React.useRef(!!pageCache[pageName]);
+  const hasFetched = useRef(!!pageCache[pageName]);
 
   useEffect(() => {
     if (hasFetched.current) return;

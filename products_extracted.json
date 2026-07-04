@@ -1,0 +1,23 @@
+[
+    {
+      id: 1,
+      title: "Panneaux Solaires Monocristallins Haute Performance",
+      category: "Énergie Solaire",
+      desc: "Idéal pour les installations résidentielles et commerciales avec un rendement optimal même par faible ensoleillement.",
+      image: "/images/produits/solar_panels.jpg"
+    },
+    {
+      id: 2,
+      title: "Batteries Lithium-Ion de Stockage",
+      category: "Stockage d'Énergie",
+      desc: "Batteries de dernière génération offrant une durée de vie prolongée et une capacité de stockage maximale pour l'autonomie nocturne.",
+      image: "/images/produits/battery.jpg"
+    },
+    {
+      id: 3,
+      title: "Onduleurs Hybrides Intelligents",
+      category: "Équipements",
+      desc: "Conversion de courant avec gestion intelligente de l'énergie entre les panneaux, le réseau public et les batteries.",
+      image: "/images/produits/inverter.jpg"
+    }
+  ]
