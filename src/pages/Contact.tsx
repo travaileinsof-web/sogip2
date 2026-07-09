@@ -17,6 +17,7 @@ const parseArray = (str: any, defaultArr: any[]) => {
 };
 
 const Contact: React.FC = () => {
+  const { data } = usePageData('contact');
   const [settings, setSettings] = useState<any>({});
   useEffect(() => {
     import('../services/api').then(({ api }) => {
@@ -32,7 +33,6 @@ const Contact: React.FC = () => {
     { platform: 'LinkedIn', url: settings.social_linkedin || data?.info?.linkedin || "https://linkedin.com/company/sogipgroup" },
     { platform: 'TikTok', url: settings.social_tiktok || data?.info?.tiktok || "https://tiktok.com/@sogipgroup" }
   ]).filter((s: any) => s.url);
-const { data } = usePageData('contact');
   const [formState, setFormState] = useState({
     nom: '',
     prenom: '',

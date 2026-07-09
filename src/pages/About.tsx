@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import FadeIn from '../components/animations/FadeIn';
 import { Helmet } from 'react-helmet-async';
 import { usePageData } from '../hooks/usePageData';
