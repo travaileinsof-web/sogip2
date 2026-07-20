@@ -91,18 +91,23 @@ const AdminSettings: React.FC = () => {
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: 'photo_fondateur' | 'photo_directeur') => {
     const file = e.target.files?.[0];
     if (!file) return;
-    
-    setMessage({ type: 'success', text: 'Upload en cours...' });
-    const fd = new FormData();
-    fd.append('image', file);
-    
-    try {
-      const response = await api.post('/admin/upload', fd);
-      setFormData(prev => ({ ...prev, [field]: response.url }));
-      setMessage({ type: 'success', text: 'Image importée avec succès !' });
-    } catch (error: any) {
-      setMessage({ type: 'error', text: error.message || "Erreur lors de l'upload de l'image." });
+
+    if (file.size > 2 * 1024 * 1024) {
+      setMessage({ type: 'error', text: 'L\'image est trop volumineuse (max 2MB).' });
+      return;
     }
+
+    setMessage({ type: 'success', text: 'Upload en cours...' });
+    
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setFormData(prev => ({ ...prev, [field]: reader.result as string }));
+      setMessage({ type: 'success', text: 'Image importée avec succès ! N\'oubliez pas de sauvegarder.' });
+    };
+    reader.onerror = () => {
+      setMessage({ type: 'error', text: "Erreur lors de la lecture de l'image." });
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
