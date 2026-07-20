@@ -132,6 +132,7 @@ export default function SogipEnergie() {
       services={SERVICES}
       whyUs={WHY_US}
       extra={<ProduitsSection />}
+      galleryCategory="energie"
     />
   );
 }

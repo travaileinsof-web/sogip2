@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import cors from 'cors';
 import { getDb } from './db/index.js';
-import { users, formations, contacts, media, pages, products, settings } from './db/schema.js';
+import { users, formations, contacts, media, pages, products, settings, realizations } from './db/schema.js';
 import { eq, desc } from 'drizzle-orm';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
@@ -423,6 +423,49 @@ app.put('/api/v1/admin/settings', authenticate, async (req, res) => {
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ message: 'Erreur serveur: ' + (error.message || String(error)) });
+  }
+});
+
+// --- REALIZATIONS ---
+app.get('/api/v1/realizations', async (req, res) => {
+  try {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+    const { category } = req.query;
+    let query = getDb().select().from(realizations).orderBy(desc(realizations.createdAt));
+    if (category) {
+      query = query.where(eq(realizations.category, String(category)));
+    }
+    const result = await query;
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+});
+
+app.get('/api/v1/admin/realizations', authenticate, async (req, res) => {
+  try {
+    const result = await getDb().select().from(realizations).orderBy(desc(realizations.createdAt));
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur serveur: ' + (error?.message || String(error)) });
+  }
+});
+
+app.post('/api/v1/admin/realizations', authenticate, async (req, res) => {
+  try {
+    const result = await getDb().insert(realizations).values(req.body).returning();
+    res.json(result[0]);
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur serveur: ' + (error?.message || String(error)) });
+  }
+});
+
+app.delete('/api/v1/admin/realizations/:id', authenticate, async (req, res) => {
+  try {
+    await getDb().delete(realizations).where(eq(realizations.id, Number(req.params.id)));
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur serveur: ' + (error?.message || String(error)) });
   }
 });
 

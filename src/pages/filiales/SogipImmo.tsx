@@ -109,6 +109,7 @@ export default function SogipImmo() {
       intro={"LePropio est la filiale immobilière du Groupe SOGIP. Notre mission : rendre l'immobilier accessible, transparent et rentable pour tous. En supprimant les intermédiaires coûteux et en plaçant la technologie au service de chaque transaction, nous transformons durablement le marché immobilier guinéen."}
       services={SERVICES}
       whyUs={WHY_US}
+      galleryCategory="immo"
     />
   );
 }

@@ -109,6 +109,7 @@ export default function SogipBtp() {
       intro="SOGIP BTP est le pôle construction du Groupe SOGIP. Fort d'une équipe pluridisciplinaire d'ingénieurs, d'architectes et de techniciens expérimentés, nous intervenons sur l'ensemble du spectre de la construction : du bâtiment individuel aux grands ouvrages d'infrastructure, en passant par les aménagements urbains et ruraux."
       services={SERVICES}
       whyUs={WHY_US}
+      galleryCategory="btp"
     />
   );
 }

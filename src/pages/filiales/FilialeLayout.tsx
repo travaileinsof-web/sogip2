@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import FadeIn from '../../components/animations/FadeIn';
+import RealizationsGallery from '../../components/RealizationsGallery';
 
 interface Service {
   icon: string;
@@ -22,9 +23,10 @@ interface FilialePageProps {
   services: Service[];
   whyUs: { icon: string; title: string; desc: string }[];
   extra?: React.ReactNode;
+  galleryCategory?: string;
 }
 
-export default function FilialePage({ seo, hero, intro, services, whyUs, extra }: FilialePageProps) {
+export default function FilialePage({ seo, hero, intro, services, whyUs, extra, galleryCategory }: FilialePageProps) {
   return (
     <>
       <title>{seo.title}</title>
@@ -121,6 +123,28 @@ export default function FilialePage({ seo, hero, intro, services, whyUs, extra }
 
       {/* EXTRA CONTENT (formations for CEF) */}
       {extra}
+
+      {/* REALIZATIONS GALLERY */}
+      {galleryCategory && (
+        <section className="bg-white py-20 border-t border-slate-100">
+          <div className="max-w-7xl mx-auto px-6">
+            <FadeIn>
+              <div className="text-center mb-14">
+                <span
+                  className="inline-block text-sm font-bold tracking-widest uppercase px-4 py-1 rounded-full mb-4"
+                  style={{ backgroundColor: `${hero.accent}18`, color: hero.accent }}
+                >
+                  Nos Réalisations
+                </span>
+                <h2 className="title-font text-3xl md:text-4xl font-bold text-blue-900">
+                  Découvrez nos projets
+                </h2>
+              </div>
+            </FadeIn>
+            <RealizationsGallery category={galleryCategory} />
+          </div>
+        </section>
+      )}
 
       {/* WHY US */}
       <section className="bg-white py-20">

@@ -148,6 +148,7 @@ export default function CefConseils() {
       services={SERVICES}
       whyUs={WHY_US}
       extra={<FormationsSection />}
+      galleryCategory="academie"
     />
   );
 }

@@ -6,6 +6,7 @@ import PartnersCarousel from '../components/PartnersCarousel';
 import FadeIn from '../components/animations/FadeIn';
 import { usePageData } from '../hooks/usePageData';
 import { sanitizeHtml } from '../utils/sanitize';
+import RealizationsGallery from '../components/RealizationsGallery';
 
 const heroImages = [
   "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=1600",
@@ -202,50 +203,8 @@ const Home: React.FC = () => {
             <p className="text-center text-slate-600 max-w-2xl mx-auto mb-16">{data?.realisations?.sous_titre || 'Découvrez les projets emblématiques qui ont marqué notre impact dans les secteurs de la construction, de l\'immobilier et de l\'énergie.'}</p>
           </FadeIn>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <FadeIn delay={0.1} className="bg-slate-50 rounded-xl shadow-luxury p-6 hover:scale-[1.02] transition duration-300">
-              <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80&w=800" className="w-full mb-6 h-48 object-cover rounded-lg" alt="BTP" />
-              <div className="flex items-center space-x-3 mb-3">
-                <img src="/images/logos/sogip_btp_new.jpg" alt="Logo GCB BTP" className="h-8 w-auto object-contain" />
-                <h3 className="text-xl font-semibold text-blue-900">{data?.realisations?.btp_titre || 'Infrastructures BTP'}</h3>
-              </div>
-              <p className="text-slate-600 text-sm leading-relaxed">
-                {data?.realisations?.btp_desc || 'Construction de complexes résidentiels majeurs et aménagement routier, livrés avec une qualité irréprochable et un taux de satisfaction de 98%.'}
-              </p>
-            </FadeIn>
-
-            <FadeIn delay={0.2} className="bg-slate-50 rounded-xl shadow-luxury p-6 hover:scale-[1.02] transition duration-300">
-              <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80&w=800" className="w-full mb-6 h-48 object-cover rounded-lg" alt="Immobilier" />
-              <div className="flex items-center space-x-3 mb-3">
-                <img src="/images/logos/leproprio.jpg" alt="Logo SOGIP Immobilier" className="h-8 w-auto object-contain mix-blend-multiply" />
-                <h3 className="text-xl font-semibold text-blue-900">{data?.realisations?.immo_titre || 'SOGIP IMMO - LePropio'}</h3>
-              </div>
-              <p className="text-slate-600 text-sm leading-relaxed">
-                {data?.realisations?.immo_desc || 'Gestion et vente de plus de 50 biens d\'exception, offrant à nos clients des investissements rentables et un patrimoine sécurisé.'}
-              </p>
-            </FadeIn>
-
-            <FadeIn delay={0.3} className="bg-slate-50 rounded-xl shadow-luxury p-6 hover:scale-[1.02] transition duration-300">
-              <img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&q=80&w=800" className="w-full mb-6 h-48 object-cover rounded-lg" alt="Energie" />
-              <div className="flex items-center space-x-3 mb-3">
-                <img src="/images/logos/soleil_guinee_transparent.png" alt="Logo SOGIP Énergie" className="h-8 w-auto object-contain" />
-                <h3 className="text-xl font-semibold text-blue-900">{data?.realisations?.energie_titre || 'SOGIP ÉNERGIE'}</h3>
-              </div>
-              <p className="text-slate-600 text-sm leading-relaxed">
-                {data?.realisations?.energie_desc || 'Déploiement de centrales solaires pour l\'autonomie énergétique des entreprises locales, réduisant drastiquement leur empreinte carbone.'}
-              </p>
-            </FadeIn>
-
-            <FadeIn delay={0.4} className="bg-slate-50 rounded-xl shadow-luxury p-6 hover:scale-[1.02] transition duration-300">
-              <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=800" className="w-full mb-6 h-48 object-cover rounded-lg" alt="Academy" />
-              <div className="flex items-center space-x-3 mb-3">
-                <img src="/images/logos/academie_sogip.jpg" alt="Logo SOGIP Academy" className="h-8 w-auto object-contain mix-blend-multiply" />
-                <h3 className="text-xl font-semibold text-blue-900">{data?.realisations?.academy_titre || 'SOGIP ACADEMY – CEF-CONSEIL'}</h3>
-              </div>
-              <p className="text-slate-600 text-sm leading-relaxed">
-                {data?.realisations?.academy_desc || 'Formations certifiantes et programmes de développement des compétences pour propulser votre carrière professionnelle.'}
-              </p>
-            </FadeIn>
+          <div className="mt-12">
+            <RealizationsGallery limit={6} />
           </div>
         </div>
       </section>

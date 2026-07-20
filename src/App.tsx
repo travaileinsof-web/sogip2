@@ -21,6 +21,7 @@ import AdminContacts from './pages/admin/AdminContacts';
 import AdminFormations from './pages/admin/AdminFormations';
 import AdminProducts from './pages/admin/AdminProducts';
 import AdminSettings from './pages/admin/AdminSettings';
+import AdminRealizations from './pages/admin/AdminRealizations';
 
 import SogipBtp from './pages/filiales/SogipBtp';
 import SogipImmo from './pages/filiales/SogipImmo';
@@ -64,6 +65,7 @@ const AnimatedRoutes = () => {
         <Route path="/admin/contacts" element={<PrivateRoute><AdminContacts /></PrivateRoute>} />
         <Route path="/admin/formations" element={<PrivateRoute><AdminFormations /></PrivateRoute>} />
         <Route path="/admin/products" element={<PrivateRoute><AdminProducts /></PrivateRoute>} />
+        <Route path="/admin/realizations" element={<PrivateRoute><AdminRealizations /></PrivateRoute>} />
         <Route path="/admin/settings" element={<PrivateRoute><AdminSettings /></PrivateRoute>} />
         <Route path="*" element={<Layout><NotFound /></Layout>} />
       </Routes>

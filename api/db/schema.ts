@@ -65,3 +65,11 @@ export const settings = pgTable('settings', {
   value: text('value').notNull(), // JSON stringified value or plain text
   updatedAt: timestamp('updated_at').defaultNow()
 });
+
+export const realizations = pgTable('realizations', {
+  id: serial('id').primaryKey(),
+  title: varchar('title', { length: 255 }),
+  category: varchar('category', { length: 255 }).notNull(),
+  image: text('image').notNull(),
+  createdAt: timestamp('created_at').defaultNow()
+});

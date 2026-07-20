@@ -4,6 +4,7 @@ import FilialesCarousel from '../components/FilialesCarousel';
 import { Helmet } from 'react-helmet-async';
 import { usePageData } from '../hooks/usePageData';
 import { sanitizeHtml } from '../utils/sanitize';
+import RealizationsGallery from '../components/RealizationsGallery';
 
 const Services: React.FC = () => {
   const [openServiceId, setOpenServiceId] = useState<string | null>(null);
@@ -165,7 +166,17 @@ const Services: React.FC = () => {
         <FilialesCarousel />
       </section>
 
-
+      {/* REALISATIONS GLOBALES */}
+      <section className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <FadeIn>
+            <h2 className="title-font text-4xl font-bold text-blue-900 mb-16 text-center capitalize">
+              Un aperçu de nos réalisations
+            </h2>
+          </FadeIn>
+          <RealizationsGallery limit={6} />
+        </div>
+      </section>
 
       {/* DETAILED SERVICES GRID (Like the slate-200 cards on Anita) */}
       <section className="bg-slate-50 py-24">

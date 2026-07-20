@@ -36,6 +36,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     { name: 'Paramètres', path: '/admin/settings', icon: <Settings size={20} /> },
     { name: 'Formations', path: '/admin/formations', icon: <GraduationCap size={20} /> },
     { name: 'Produits (Soleil)', path: '/admin/products', icon: <ShoppingBag size={20} /> },
+    { name: 'Réalisations', path: '/admin/realizations', icon: <ImageIcon size={20} /> },
     { name: 'Messages', path: '/admin/contacts', icon: <MessageSquare size={20} /> },
   ];
 
