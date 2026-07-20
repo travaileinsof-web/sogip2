@@ -130,6 +130,32 @@ app.post('/api/v1/auth/logout', (req, res) => {
   res.json({ success: true });
 });
 
+// --- CONTACTS ---
+app.post('/api/v1/contacts', async (req, res) => {
+  try {
+    const { nom, prenom, email, telephone, sujet, filiale, message } = req.body;
+    
+    // Basic validation
+    if (!nom || !prenom || !email || !message) {
+      return res.status(400).json({ success: false, message: 'Champs obligatoires manquants' });
+    }
+
+    await getDb().insert(contacts).values({
+      name: `${prenom} ${nom}`.trim(),
+      email,
+      subject: sujet || 'Contact depuis le site',
+      message: `Téléphone: ${telephone || 'Non renseigné'}\nFiliale: ${filiale || 'Non renseignée'}\n\n${message}`,
+      status: 'nouveau',
+      read: false
+    });
+    
+    res.json({ success: true, message: 'Message envoyé avec succès' });
+  } catch (error: any) {
+    console.error('Erreur POST /contacts:', error);
+    res.status(500).json({ success: false, message: 'Erreur serveur' });
+  }
+});
+
 // --- PUBLIC ROUTES ---
 app.get('/api/v1/formations', async (req, res) => {
   try {
@@ -189,12 +215,66 @@ app.get('/api/v1/stats', authenticate, async (req, res) => {
   }
 });
 
+// --- CONTACTS (ADMIN) ---
+app.get('/api/v1/admin/contacts', authenticate, async (req, res) => {
+  try {
+    const result = await getDb().select().from(contacts).orderBy(desc(contacts.createdAt));
+    res.json({ success: true, data: result });
+  } catch (error: any) {
+    res.status(500).json({ success: false, message: 'Erreur serveur' });
+  }
+});
+
+app.get('/api/v1/admin/contacts/:id', authenticate, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await getDb().select().from(contacts).where(eq(contacts.id, Number(id))).limit(1);
+    if (result.length === 0) {
+      return res.status(404).json({ success: false, message: 'Message introuvable' });
+    }
+    res.json({ success: true, data: result[0] });
+  } catch (error: any) {
+    res.status(500).json({ success: false, message: 'Erreur serveur' });
+  }
+});
+
+app.put('/api/v1/admin/contacts/:id/read', authenticate, async (req, res) => {
+  try {
+    const { id } = req.params;
+    await getDb().update(contacts).set({ status: 'lu', read: true }).where(eq(contacts.id, Number(id)));
+    res.json({ success: true });
+  } catch (error: any) {
+    res.status(500).json({ success: false, message: 'Erreur serveur' });
+  }
+});
+
+app.put('/api/v1/admin/contacts/:id/status', authenticate, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    await getDb().update(contacts).set({ status }).where(eq(contacts.id, Number(id)));
+    res.json({ success: true });
+  } catch (error: any) {
+    res.status(500).json({ success: false, message: 'Erreur serveur' });
+  }
+});
+
+app.delete('/api/v1/admin/contacts/:id', authenticate, async (req, res) => {
+  try {
+    const { id } = req.params;
+    await getDb().delete(contacts).where(eq(contacts.id, Number(id)));
+    res.json({ success: true });
+  } catch (error: any) {
+    res.status(500).json({ success: false, message: 'Erreur serveur' });
+  }
+});
+
 // --- FORMATIONS ---
 app.get('/api/v1/admin/formations', authenticate, async (req, res) => {
   try {
     const result = await getDb().select().from(formations).orderBy(desc(formations.createdAt));
     res.json(result);
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ message: 'Erreur serveur: ' + (error.message || String(error)) });
   }
 });

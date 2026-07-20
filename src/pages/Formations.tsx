@@ -4,6 +4,7 @@ import FadeIn from '../components/animations/FadeIn';
 
 const Formations: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>("Toutes");
+  const [activeMode, setActiveMode] = useState<string>("Tous les modes");
   const [selectedCourse, setSelectedCourse] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currency, setCurrency] = useState<'EUR'|'USD'|'FCFA'|'GNF'>('EUR');
@@ -48,7 +49,8 @@ const Formations: React.FC = () => {
             duration: curr.duration,
             price: curr.price,
             desc: curr.description,
-            image: curr.image
+            image: curr.image,
+            mode: curr.mode
           });
           return acc;
         }, {});
@@ -64,10 +66,17 @@ const Formations: React.FC = () => {
   }, []);
 
   const categories = ["Toutes", ...formationsList.map(f => f.category)];
+  const modes = ["Tous les modes", "En Ligne", "Présentiel", "Hybride"];
 
-  const filteredFormations = activeCategory === "Toutes" 
-    ? formationsList 
-    : formationsList.filter(f => f.category === activeCategory);
+  const filteredFormations = formationsList.filter(f => {
+    return activeCategory === "Toutes" || f.category === activeCategory;
+  }).map(f => {
+    if (activeMode === "Tous les modes") return f;
+    return {
+      ...f,
+      courses: f.courses.filter((c: any) => c.mode === activeMode)
+    };
+  }).filter(f => f.courses.length > 0);
 
   const handleOpenModal = (course: any) => {
     setSelectedCourse(course);
@@ -124,20 +133,37 @@ const Formations: React.FC = () => {
         {/* FILTER BUTTONS */}
         <div className="max-w-7xl mx-auto px-6 mb-16">
           <FadeIn delay={0.1}>
-            <div className="flex flex-wrap justify-center gap-4">
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setActiveCategory(cat)}
-                  className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                    activeCategory === cat 
-                    ? 'bg-amber-500 text-slate-900 shadow-[0_0_20px_rgba(245,158,11,0.3)]' 
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200'
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
+            <div className="flex flex-col items-center gap-6">
+              <div className="flex flex-wrap justify-center gap-4">
+                {categories.map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => setActiveCategory(cat)}
+                    className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                      activeCategory === cat 
+                      ? 'bg-amber-500 text-slate-900 shadow-[0_0_20px_rgba(245,158,11,0.3)]' 
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200'
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+              <div className="flex flex-wrap justify-center gap-3">
+                {modes.map((mode) => (
+                  <button
+                    key={mode}
+                    onClick={() => setActiveMode(mode)}
+                    className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-300 border ${
+                      activeMode === mode 
+                      ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-200' 
+                      : 'bg-white text-slate-500 border-slate-200 hover:border-blue-300 hover:text-blue-600'
+                    }`}
+                  >
+                    {mode}
+                  </button>
+                ))}
+              </div>
             </div>
           </FadeIn>
         </div>
@@ -182,8 +208,13 @@ const Formations: React.FC = () => {
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {section.courses.map((course, cIdx) => (
                     <div key={cIdx} className="group bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 hover:border-amber-500/30">
-                      <div className="h-48 overflow-hidden rounded-xl mb-6">
+                      <div className="h-48 overflow-hidden rounded-xl mb-6 relative">
                         <img src={course.image} alt={course.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                        {course.mode && (
+                          <div className="absolute top-3 right-3 bg-slate-900/80 backdrop-blur-md text-white text-xs font-bold px-3 py-1.5 rounded-full border border-white/10">
+                            {course.mode}
+                          </div>
+                        )}
                       </div>
                       <h3 className="text-lg font-bold text-slate-900 mb-2 leading-snug min-h-[3.5rem]">{course.title}</h3>
                       <p className="text-slate-500 text-sm mb-4 line-clamp-2">{course.desc}</p>

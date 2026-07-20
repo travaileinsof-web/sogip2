@@ -5,14 +5,13 @@ import { api } from '../../services/api';
 
 interface Contact {
   id: number;
-  nom: string;
-  prenom: string;
+  name: string;
   email: string;
-  telephone: string;
-  sujet: string;
-  filiale: string;
-  statut: string;
-  created_at: string;
+  subject: string;
+  message: string;
+  status: string;
+  read: boolean;
+  createdAt: string;
 }
 
 const AdminContacts: React.FC = () => {
@@ -46,9 +45,9 @@ const AdminContacts: React.FC = () => {
     }
   };
 
-  const handleStatusChange = async (id: number, statut: string) => {
+  const handleStatusChange = async (id: number, status: string) => {
      try {
-       await api.put(`/admin/contacts/${id}/status`, { statut });
+       await api.put(`/admin/contacts/${id}/status`, { status });
        fetchContacts();
      } catch (error) {
        console.error('Failed to change status', error);
@@ -60,13 +59,16 @@ const AdminContacts: React.FC = () => {
     try {
       await api.delete(`/admin/contacts/${id}`);
       fetchContacts();
+      if (selectedContact?.id === id) {
+        setSelectedContact(null);
+      }
     } catch (error) {
       console.error('Failed to delete contact', error);
     }
   };
 
   const viewDetails = async (contact: Contact) => {
-    if (contact.statut === 'nouveau') {
+    if (contact.status === 'nouveau' || !contact.read) {
       await markAsRead(contact.id);
     }
     
@@ -106,22 +108,19 @@ const AdminContacts: React.FC = () => {
                 <div 
                   key={contact.id} 
                   onClick={() => viewDetails(contact)}
-                  className={`p-4 cursor-pointer transition-colors hover:bg-gray-50 ${contact.statut === 'nouveau' ? 'bg-blue-50/50 border-l-4 border-sogip-primary' : 'border-l-4 border-transparent'} ${selectedContact?.id === contact.id ? 'bg-gray-100' : ''}`}
+                  className={`p-4 cursor-pointer transition-colors hover:bg-gray-50 ${contact.status === 'nouveau' ? 'bg-blue-50/50 border-l-4 border-sogip-primary' : 'border-l-4 border-transparent'} ${selectedContact?.id === contact.id ? 'bg-gray-100' : ''}`}
                 >
                   <div className="flex justify-between items-start mb-1">
                     <h4 className="text-sm font-semibold text-gray-900 truncate pr-2">
-                      {contact.nom} {contact.prenom}
+                      {contact.name}
                     </h4>
                     <span className="text-xs text-gray-500 shrink-0">
-                      {new Date(contact.created_at).toLocaleDateString('fr-FR')}
+                      {new Date(contact.createdAt).toLocaleDateString('fr-FR')}
                     </span>
                   </div>
-                  <p className={`text-xs ${contact.statut === 'nouveau' ? 'font-semibold text-gray-800' : 'text-gray-500'} truncate`}>
-                    {contact.sujet}
+                  <p className={`text-xs ${contact.status === 'nouveau' ? 'font-semibold text-gray-800' : 'text-gray-500'} truncate`}>
+                    {contact.subject}
                   </p>
-                  <div className="mt-2 text-xs">
-                     <span className="px-2 py-0.5 bg-gray-200 rounded-full">{contact.filiale}</span>
-                  </div>
                 </div>
               ))
             )}
@@ -134,21 +133,21 @@ const AdminContacts: React.FC = () => {
             <>
               <div className="px-8 py-6 border-b border-gray-100 bg-white flex justify-between items-start shrink-0">
                 <div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{selectedContact.sujet}</h3>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{selectedContact.subject}</h3>
                   <div className="flex items-center text-sm text-gray-600 space-x-4">
-                    <span className="flex items-center"><Calendar size={14} className="mr-1" /> {new Date(selectedContact.created_at).toLocaleString('fr-FR')}</span>
-                    <span className="px-2 py-0.5 bg-gray-100 rounded-md font-medium capitalize">{selectedContact.filiale}</span>
+                    <span className="flex items-center"><Calendar size={14} className="mr-1" /> {new Date(selectedContact.createdAt).toLocaleString('fr-FR')}</span>
                   </div>
                 </div>
                 <div className="flex space-x-2">
                   <select 
-                    value={selectedContact.statut}
+                    value={selectedContact.status}
                     onChange={(e) => {
                       handleStatusChange(selectedContact.id, e.target.value);
-                      setSelectedContact({...selectedContact, statut: e.target.value});
+                      setSelectedContact({...selectedContact, status: e.target.value});
                     }}
                     className="text-sm border-gray-300 rounded-md shadow-sm focus:border-sogip-primary focus:ring focus:ring-sogip-primary focus:ring-opacity-50"
                   >
+                    <option value="nouveau">Nouveau</option>
                     <option value="lu">Lu</option>
                     <option value="traite">Traité</option>
                     <option value="archive">Archivé</option>
@@ -164,23 +163,19 @@ const AdminContacts: React.FC = () => {
                   <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-100">
                     <div className="flex items-center space-x-4">
                       <div className="w-12 h-12 rounded-full bg-sogip-primary/10 flex items-center justify-center text-sogip-primary font-bold text-lg">
-                        {selectedContact.nom.charAt(0)}{selectedContact.prenom.charAt(0)}
+                        {selectedContact.name.substring(0, 2).toUpperCase()}
                       </div>
                       <div>
-                        <p className="font-semibold text-gray-900">{selectedContact.nom} {selectedContact.prenom}</p>
+                        <p className="font-semibold text-gray-900">{selectedContact.name}</p>
                         <div className="flex space-x-4 text-sm text-gray-500 mt-1">
                           <a href={`mailto:${selectedContact.email}`} className="flex items-center hover:text-sogip-primary"><Mail size={14} className="mr-1" /> {selectedContact.email}</a>
-                          {selectedContact.telephone && (
-                            <a href={`tel:${selectedContact.telephone}`} className="flex items-center hover:text-sogip-primary"><Phone size={14} className="mr-1" /> {selectedContact.telephone}</a>
-                          )}
                         </div>
                       </div>
                     </div>
                   </div>
                   
                   <div className="prose max-w-none text-gray-700 whitespace-pre-wrap">
-                    {/* Hack to avoid ts error on message if we didn't type it in Contact interface. Assume it exists when fetching details */}
-                    {(selectedContact as any).message || 'Aucun contenu.'}
+                    {selectedContact.message || 'Aucun contenu.'}
                   </div>
                 </div>
               </div>

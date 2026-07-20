@@ -17,6 +17,7 @@ export const formations = pgTable('formations', {
   price: integer('price').notNull(),
   description: text('description').notNull(),
   image: text('image').notNull(),
+  mode: varchar('mode', { length: 50 }).default('Présentiel'),
   actif: boolean('actif').default(true),
   createdAt: timestamp('created_at').defaultNow()
 });

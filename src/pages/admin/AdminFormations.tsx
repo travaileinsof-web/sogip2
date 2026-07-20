@@ -11,6 +11,7 @@ interface Formation {
   price: number;
   description: string;
   image: string;
+  mode?: string;
   actif: boolean;
 }
 
@@ -143,7 +144,7 @@ const AdminFormations: React.FC = () => {
           </div>
           {!isAdding && !editingId && (
             <button
-              onClick={() => { setIsAdding(true); setFormData({ actif: true, price: 0 }); setInputValue(''); }}
+              onClick={() => { setIsAdding(true); setFormData({ actif: true, price: 0, mode: 'Présentiel' }); setInputValue(''); }}
               className="flex items-center gap-2 bg-sogip-primary text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition-colors"
             >
               <Plus size={20} />
@@ -184,6 +185,14 @@ const AdminFormations: React.FC = () => {
               <div className="col-span-1">
                 <label className="block text-sm font-medium text-gray-700 mb-1">Durée (ex: 2 Jours)</label>
                 <input required type="text" name="duration" value={formData.duration || ''} onChange={handleInputChange} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" />
+              </div>
+              <div className="col-span-1">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Mode d'apprentissage</label>
+                <select required name="mode" value={formData.mode || 'Présentiel'} onChange={handleInputChange} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                  <option value="Présentiel">Présentiel</option>
+                  <option value="En ligne">En ligne</option>
+                  <option value="Hybride">Hybride</option>
+                </select>
               </div>
 
               <div className="col-span-1">
@@ -265,7 +274,7 @@ const AdminFormations: React.FC = () => {
               <tr className="bg-gray-50 border-b border-gray-100">
                 <th className="px-6 py-4 font-semibold text-gray-600 text-sm">Formation</th>
                 <th className="px-6 py-4 font-semibold text-gray-600 text-sm">Catégorie</th>
-                <th className="px-6 py-4 font-semibold text-gray-600 text-sm">Durée</th>
+                <th className="px-6 py-4 font-semibold text-gray-600 text-sm">Durée / Mode</th>
                 <th className="px-6 py-4 font-semibold text-gray-600 text-sm">Statut</th>
                 <th className="px-6 py-4 font-semibold text-gray-600 text-sm text-right">Actions</th>
               </tr>
@@ -283,7 +292,10 @@ const AdminFormations: React.FC = () => {
                     <td className="px-6 py-4">
                       <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-medium">{formation.category}</span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">{formation.duration}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600">
+                      <div>{formation.duration}</div>
+                      <div className="text-xs text-gray-400 mt-1">{formation.mode || 'Présentiel'}</div>
+                    </td>
                     <td className="px-6 py-4">
                       <button onClick={() => toggleStatus(formation)} className={`flex items-center gap-2 ${formation.actif ? 'text-green-600' : 'text-gray-400'}`}>
                         {formation.actif ? <ToggleRight size={24} /> : <ToggleLeft size={24} />}
