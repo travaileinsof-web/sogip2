@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, Search, Home, ArrowRight, CheckCircle, Mail, Phone, Tag } from 'lucide-react';
 import { api } from '../../services/api';
@@ -32,7 +32,7 @@ const PropertiesList: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'Tous' | 'Vente' | 'Location'>('Tous');
   const [typeFilter, setTypeFilter] = useState('Tous');
   
-  // Modale Detail Propriété
+  // Modale Detail PropriÃ©tÃ©
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
@@ -51,7 +51,7 @@ const PropertiesList: React.FC = () => {
       const data = await api.get('/properties');
       setProperties(data);
     } catch (error) {
-      console.error('Erreur chargement propriétés', error);
+      console.error('Erreur chargement propriÃ©tÃ©s', error);
     } finally {
       setLoading(false);
     }
@@ -70,7 +70,7 @@ const PropertiesList: React.FC = () => {
         prenom: prenom,
         email: searchForm.email || 'no-email@sogip.com',
         telephone: searchForm.phone,
-        sujet: 'Recherche Immobilière sur Mesure',
+        sujet: 'Recherche ImmobiliÃ¨re sur Mesure',
         message: searchForm.message
       });
       
@@ -78,7 +78,7 @@ const PropertiesList: React.FC = () => {
       const whatsappMessage = `Bonjour Le Proprio !
 
 Nom: ${nom} ${prenom}
-Téléphone: ${searchForm.phone}
+TÃ©lÃ©phone: ${searchForm.phone}
 
 ${searchForm.message}`;
       const whatsappLink = `https://wa.me/224610111100?text=${encodeURIComponent(whatsappMessage)}`;
@@ -109,7 +109,7 @@ ${searchForm.message}`;
     // Instead of direct whatsapp link, we show search modal pre-filled
     setSearchForm({
       name: '', phone: '', email: '',
-      message: `Je suis intéressé(e) par : ${property.title} (${property.location}) à ${formatPrice(property.price, property.currency)}.`
+      message: `Je suis intÃ©ressÃ©(e) par : ${property.title} (${property.location}) Ã  ${formatPrice(property.price, property.currency)}.`
     });
     setShowSearchModal(true);
   };
@@ -118,9 +118,9 @@ ${searchForm.message}`;
     <section className="py-20 bg-gray-50" id="offres">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-12">
-          <h2 className="title-font text-4xl font-bold text-gray-900 mb-4">Nos <span className="text-emerald-600">Offres</span> Immobilières</h2>
+          <h2 className="title-font text-4xl font-bold text-gray-900 mb-4">Nos <span className="text-emerald-600">Offres</span> ImmobiliÃ¨res</h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Découvrez notre sélection de biens immobiliers vérifiés et certifiés. Que ce soit pour acheter, vendre ou louer, nous vous accompagnons à chaque étape.
+            DÃ©couvrez notre sÃ©lection de biens immobiliers vÃ©rifiÃ©s et certifiÃ©s. Que ce soit pour acheter, vendre ou louer, nous vous accompagnons Ã  chaque Ã©tape.
           </p>
         </div>
 
@@ -236,7 +236,7 @@ ${searchForm.message}`;
                         }`}
                       >
                         <Phone size={18} />
-                        Je suis intéressé(e)
+                        Je suis intÃ©ressÃ©(e)
                       </button>
                     </div>
                   </div>
@@ -253,7 +253,7 @@ ${searchForm.message}`;
               onClick={() => setShowSearchModal(true)}
               className="mt-6 px-6 py-2 bg-emerald-50 text-emerald-700 rounded-lg font-medium hover:bg-emerald-100 transition-colors"
             >
-              Faire une demande spécifique
+              Faire une demande spÃ©cifique
             </button>
           </div>
         )}
@@ -277,7 +277,7 @@ ${searchForm.message}`;
             >
               <div className="bg-emerald-600 p-6 text-white text-center">
                 <h3 className="title-font text-2xl font-bold mb-1">Contact / Demande d'information</h3>
-                <p className="text-emerald-100 text-sm">Laissez-nous vos coordonnées, un conseiller vous recontactera.</p>
+                <p className="text-emerald-100 text-sm">Laissez-nous vos coordonnÃ©es, un conseiller vous recontactera.</p>
               </div>
               
               <div className="p-6">
@@ -286,8 +286,8 @@ ${searchForm.message}`;
                     <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
                       <CheckCircle size={32} />
                     </div>
-                    <h4 className="text-xl font-bold text-gray-900 mb-2">Demande envoyée !</h4>
-                    <p className="text-gray-600">Notre équipe va traiter votre demande et vous recontactera très vite.</p>
+                    <h4 className="text-xl font-bold text-gray-900 mb-2">Demande envoyÃ©e !</h4>
+                    <p className="text-gray-600">Notre Ã©quipe va traiter votre demande et vous recontactera trÃ¨s vite.</p>
                   </div>
                 ) : (
                   <form onSubmit={handleSearchSubmit} className="space-y-4">
@@ -297,7 +297,7 @@ ${searchForm.message}`;
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone *</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">TÃ©lÃ©phone *</label>
                         <input required type="tel" value={searchForm.phone} onChange={e => setSearchForm({...searchForm, phone: e.target.value})} className="w-full px-4 py-2 bg-gray-50 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
                       </div>
                       <div>
@@ -306,12 +306,12 @@ ${searchForm.message}`;
                       </div>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Décrivez votre besoin *</label>
-                      <textarea required value={searchForm.message} onChange={e => setSearchForm({...searchForm, message: e.target.value})} rows={4} placeholder="Ex: Je cherche un terrain de 500m2 à Coyah, budget max 50M GNF..." className="w-full px-4 py-2 bg-gray-50 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none resize-none"></textarea>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">DÃ©crivez votre besoin *</label>
+                      <textarea required value={searchForm.message} onChange={e => setSearchForm({...searchForm, message: e.target.value})} rows={4} placeholder="Ex: Je cherche un terrain de 500m2 Ã à Coyah, budget max 50M GNF..." className="w-full px-4 py-2 bg-gray-50 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none resize-none"></textarea>
                     </div>
                     
                     {searchStatus === 'error' && (
-                      <p className="text-red-500 text-sm">Une erreur est survenue. Veuillez réessayer.</p>
+                      <p className="text-red-500 text-sm">Une erreur est survenue. Veuillez rÃ©essayer.</p>
                     )}
                     
                     <div className="flex gap-3 pt-4">
@@ -334,3 +334,5 @@ ${searchForm.message}`;
 };
 
 export default PropertiesList;
+
+
