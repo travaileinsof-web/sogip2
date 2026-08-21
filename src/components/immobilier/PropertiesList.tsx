@@ -15,6 +15,7 @@ export interface Property {
   location: string;
   area: number | null;
   image: string;
+  gallery: string | null;
   features: string | null;
   createdAt: string;
 }
@@ -31,7 +32,12 @@ const PropertiesList: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'Tous' | 'Vente' | 'Location'>('Tous');
   const [typeFilter, setTypeFilter] = useState('Tous');
   
-  // Modale Recherche sur Mesure
+  // Modale Detail Propriété
+  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+  
+  // Modale Contact / Demande d'information
   const [showSearchModal, setShowSearchModal] = useState(false);
   const [searchForm, setSearchForm] = useState({ name: '', phone: '', email: '', message: '' });
   const [searchStatus, setSearchStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -67,7 +73,19 @@ const PropertiesList: React.FC = () => {
         sujet: 'Recherche Immobilière sur Mesure',
         message: searchForm.message
       });
+      
+      // Redirect to WhatsApp
+      const whatsappMessage = `Bonjour Le Proprio !
+
+Nom: ${nom} ${prenom}
+Téléphone: ${searchForm.phone}
+
+${searchForm.message}`;
+      const whatsappLink = `https://wa.me/224610111100?text=${encodeURIComponent(whatsappMessage)}`;
+      window.open(whatsappLink, '_blank');
+      
       setSearchStatus('success');
+
       setTimeout(() => {
         setShowSearchModal(false);
         setSearchStatus('idle');
@@ -86,12 +104,14 @@ const PropertiesList: React.FC = () => {
 
   const propertyTypes = ['Tous', ...Array.from(new Set(properties.map(p => p.propertyType)))];
 
-  const handleInterested = (property: Property) => {
-    const message = `Bonjour Le Proprio ! Je suis intéressé(e) par cette offre : ${property.title} (${property.location}) à ${formatPrice(property.price, property.currency)}. Pouvez-vous me donner plus de détails ?`;
-    // Assuming SOGIP group WhatsApp number is +224620000000 (replace with real if known, using generic for now)
-    // Looking at footer, it's usually dynamic or fixed. I'll use a placeholder or pull from settings if needed.
-    const whatsappLink = `https://wa.me/224610111100?text=${encodeURIComponent(message)}`;
-    window.open(whatsappLink, '_blank');
+  const handleInterested = (property: Property, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    // Instead of direct whatsapp link, we show search modal pre-filled
+    setSearchForm({
+      name: '', phone: '', email: '',
+      message: `Je suis intéressé(e) par : ${property.title} (${property.location}) à ${formatPrice(property.price, property.currency)}.`
+    });
+    setShowSearchModal(true);
   };
 
   return (
@@ -152,14 +172,15 @@ const PropertiesList: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <AnimatePresence>
               {filteredProperties.map((property) => (
-                <motion.div
+                                <motion.div
                   layout
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.3 }}
                   key={property.id}
-                  className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow border border-gray-100 group flex flex-col"
+                  className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow border border-gray-100 group flex flex-col cursor-pointer"
+                  onClick={() => { setSelectedProperty(property); setActiveImageIndex(0); }}
                 >
                   <div className="relative h-64 overflow-hidden">
                     <img 
@@ -206,7 +227,7 @@ const PropertiesList: React.FC = () => {
                     
                     <div className="mt-auto flex gap-3">
                       <button 
-                        onClick={() => handleInterested(property)}
+                        onClick={(e) => handleInterested(property, e)}
                         disabled={property.status !== 'Disponible'}
                         className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg font-medium transition-colors ${
                           property.status === 'Disponible' 
@@ -238,7 +259,7 @@ const PropertiesList: React.FC = () => {
         )}
       </div>
 
-      {/* Modal Recherche sur Mesure */}
+      {/* Modal Contact / Demande d'information */}
       <AnimatePresence>
         {showSearchModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -255,8 +276,8 @@ const PropertiesList: React.FC = () => {
               className="bg-white rounded-2xl shadow-xl w-full max-w-lg relative z-10 overflow-hidden"
             >
               <div className="bg-emerald-600 p-6 text-white text-center">
-                <h3 className="title-font text-2xl font-bold mb-1">Recherche sur Mesure</h3>
-                <p className="text-emerald-100 text-sm">Dites-nous ce que vous cherchez, nous le trouverons pour vous.</p>
+                <h3 className="title-font text-2xl font-bold mb-1">Contact / Demande d'information</h3>
+                <p className="text-emerald-100 text-sm">Laissez-nous vos coordonnées, un conseiller vous recontactera.</p>
               </div>
               
               <div className="p-6">
