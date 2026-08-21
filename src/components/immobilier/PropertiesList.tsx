@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, Search, Home, ArrowRight, CheckCircle, Mail, Phone, Tag } from 'lucide-react';
 import { api } from '../../services/api';
@@ -32,7 +32,7 @@ const PropertiesList: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'Tous' | 'Vente' | 'Location'>('Tous');
   const [typeFilter, setTypeFilter] = useState('Tous');
   
-  // Modale Detail PropriÃ©tÃ©
+  // Modale Detail Propriété
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
@@ -51,7 +51,7 @@ const PropertiesList: React.FC = () => {
       const data = await api.get('/properties');
       setProperties(data);
     } catch (error) {
-      console.error('Erreur chargement propriÃ©tÃ©s', error);
+      console.error('Erreur chargement propriétés', error);
     } finally {
       setLoading(false);
     }
@@ -70,7 +70,7 @@ const PropertiesList: React.FC = () => {
         prenom: prenom,
         email: searchForm.email || 'no-email@sogip.com',
         telephone: searchForm.phone,
-        sujet: 'Recherche ImmobiliÃ¨re sur Mesure',
+        sujet: 'Recherche Immobilière sur Mesure',
         message: searchForm.message
       });
       
@@ -78,7 +78,7 @@ const PropertiesList: React.FC = () => {
       const whatsappMessage = `Bonjour Le Proprio !
 
 Nom: ${nom} ${prenom}
-TÃ©lÃ©phone: ${searchForm.phone}
+Téléphone: ${searchForm.phone}
 
 ${searchForm.message}`;
       const whatsappLink = `https://wa.me/224610111100?text=${encodeURIComponent(whatsappMessage)}`;
@@ -109,7 +109,7 @@ ${searchForm.message}`;
     // Instead of direct whatsapp link, we show search modal pre-filled
     setSearchForm({
       name: '', phone: '', email: '',
-      message: `Je suis intÃ©ressÃ©(e) par : ${property.title} (${property.location}) Ã  ${formatPrice(property.price, property.currency)}.`
+      message: `Je suis intéressé(e) par : ${property.title} (${property.location}) à  ${formatPrice(property.price, property.currency)}.`
     });
     setShowSearchModal(true);
   };
@@ -118,9 +118,9 @@ ${searchForm.message}`;
     <section className="py-20 bg-gray-50" id="offres">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-12">
-          <h2 className="title-font text-4xl font-bold text-gray-900 mb-4">Nos <span className="text-emerald-600">Offres</span> ImmobiliÃ¨res</h2>
+          <h2 className="title-font text-4xl font-bold text-gray-900 mb-4">Nos <span className="text-emerald-600">Offres</span> Immobilières</h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            DÃ©couvrez notre sÃ©lection de biens immobiliers vÃ©rifiÃ©s et certifiÃ©s. Que ce soit pour acheter, vendre ou louer, nous vous accompagnons Ã  chaque Ã©tape.
+            Découvrez notre sélection de biens immobiliers vérifiés et certifiés. Que ce soit pour acheter, vendre ou louer, nous vous accompagnons à  chaque étape.
           </p>
         </div>
 
@@ -236,7 +236,7 @@ ${searchForm.message}`;
                         }`}
                       >
                         <Phone size={18} />
-                        Je suis intÃ©ressÃ©(e)
+                        Je suis intéressé(e)
                       </button>
                     </div>
                   </div>
@@ -253,11 +253,135 @@ ${searchForm.message}`;
               onClick={() => setShowSearchModal(true)}
               className="mt-6 px-6 py-2 bg-emerald-50 text-emerald-700 rounded-lg font-medium hover:bg-emerald-100 transition-colors"
             >
-              Faire une demande spÃ©cifique
+              Faire une demande spécifique
             </button>
           </div>
         )}
       </div>
+
+      {/* Modal Details Propriété */}
+      <AnimatePresence>
+        {selectedProperty && (
+          <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 md:p-6">
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/80 backdrop-blur-sm"
+              onClick={() => setSelectedProperty(null)}
+            />
+            
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-y-auto relative z-10 flex flex-col md:flex-row"
+            >
+              <button 
+                onClick={() => setSelectedProperty(null)}
+                className="absolute top-4 right-4 z-20 bg-black/50 hover:bg-black/80 text-white rounded-full p-2 transition-colors"
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </button>
+
+              {/* Gallery Section */}
+              <div className="w-full md:w-1/2 bg-gray-100 flex flex-col">
+                {(() => {
+                  let images = [selectedProperty.image];
+                  if (selectedProperty.gallery) {
+                    try {
+                      const galleryArr = JSON.parse(selectedProperty.gallery);
+                      if (Array.isArray(galleryArr)) images = [...images, ...galleryArr];
+                    } catch(e) {}
+                  }
+                  
+                  return (
+                    <>
+                      <div className="relative h-64 md:h-96 bg-black">
+                        <img 
+                          src={images[activeImageIndex]} 
+                          alt={selectedProperty.title} 
+                          className="w-full h-full object-contain"
+                        />
+                        {images.length > 1 && (
+                          <>
+                            <button onClick={(e) => { e.stopPropagation(); setActiveImageIndex((prev) => (prev > 0 ? prev - 1 : images.length - 1)); }} className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white p-2 rounded-full">
+                              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                            </button>
+                            <button onClick={(e) => { e.stopPropagation(); setActiveImageIndex((prev) => (prev < images.length - 1 ? prev + 1 : 0)); }} className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white p-2 rounded-full">
+                              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </button>
+                          </>
+                        )}
+                      </div>
+                      {images.length > 1 && (
+                        <div className="flex gap-2 overflow-x-auto p-4 bg-white border-t">
+                          {images.map((img, idx) => (
+                            <button 
+                              key={idx} 
+                              onClick={(e) => { e.stopPropagation(); setActiveImageIndex(idx); }}
+                              className={`flex-shrink-0 w-20 h-20 rounded-md overflow-hidden border-2 ${activeImageIndex === idx ? 'border-emerald-600' : 'border-transparent'}`}
+                            >
+                              <img src={img} className="w-full h-full object-cover" />
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </>
+                  );
+                })()}
+              </div>
+
+              {/* Details Section */}
+              <div className="w-full md:w-1/2 p-6 md:p-8 flex flex-col">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-white ${selectedProperty.transactionType === 'Vente' ? 'bg-blue-600' : 'bg-emerald-600'}`}>
+                    {selectedProperty.transactionType}
+                  </span>
+                  <span className="text-emerald-600 bg-emerald-50 px-3 py-1 rounded text-xs font-semibold">
+                    {selectedProperty.propertyType}
+                  </span>
+                  <span className={`px-3 py-1 rounded text-xs font-bold ${selectedProperty.status === 'Disponible' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}`}>
+                    {selectedProperty.status}
+                  </span>
+                </div>
+                
+                <h2 className="title-font text-3xl font-bold text-gray-900 mb-2">{selectedProperty.title}</h2>
+                <div className="flex items-center text-gray-500 mb-6">
+                  <MapPin size={18} className="mr-1 text-gray-400" />
+                  {selectedProperty.location}
+                </div>
+                
+                <p className="text-4xl font-bold text-emerald-600 mb-8">
+                  {formatPrice(selectedProperty.price, selectedProperty.currency)}
+                </p>
+
+                <div className="prose prose-emerald max-w-none mb-8 text-gray-600 whitespace-pre-line flex-grow">
+                  <h4 className="text-lg font-semibold text-gray-900 mb-2 border-b pb-2">Description</h4>
+                  {selectedProperty.description}
+                </div>
+
+                <div className="mt-auto pt-6 border-t border-gray-100">
+                  <button 
+                    onClick={() => {
+                      setSelectedProperty(null);
+                      handleInterested(selectedProperty);
+                    }}
+                    disabled={selectedProperty.status !== 'Disponible'}
+                    className={`w-full flex items-center justify-center gap-2 py-4 rounded-xl font-bold text-lg transition-colors ${
+                      selectedProperty.status === 'Disponible' 
+                        ? 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-lg hover:shadow-xl' 
+                        : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                    }`}
+                  >
+                    <Phone size={24} />
+                    Je suis intéressé(e)
+                  </button>
+                </div>
+              </div>
+
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* Modal Contact / Demande d'information */}
       <AnimatePresence>
@@ -277,7 +401,7 @@ ${searchForm.message}`;
             >
               <div className="bg-emerald-600 p-6 text-white text-center">
                 <h3 className="title-font text-2xl font-bold mb-1">Contact / Demande d'information</h3>
-                <p className="text-emerald-100 text-sm">Laissez-nous vos coordonnÃ©es, un conseiller vous recontactera.</p>
+                <p className="text-emerald-100 text-sm">Laissez-nous vos coordonnées, un conseiller vous recontactera.</p>
               </div>
               
               <div className="p-6">
@@ -286,8 +410,8 @@ ${searchForm.message}`;
                     <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
                       <CheckCircle size={32} />
                     </div>
-                    <h4 className="text-xl font-bold text-gray-900 mb-2">Demande envoyÃ©e !</h4>
-                    <p className="text-gray-600">Notre Ã©quipe va traiter votre demande et vous recontactera trÃ¨s vite.</p>
+                    <h4 className="text-xl font-bold text-gray-900 mb-2">Demande envoyée !</h4>
+                    <p className="text-gray-600">Notre équipe va traiter votre demande et vous recontactera très vite.</p>
                   </div>
                 ) : (
                   <form onSubmit={handleSearchSubmit} className="space-y-4">
@@ -297,7 +421,7 @@ ${searchForm.message}`;
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">TÃ©lÃ©phone *</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone *</label>
                         <input required type="tel" value={searchForm.phone} onChange={e => setSearchForm({...searchForm, phone: e.target.value})} className="w-full px-4 py-2 bg-gray-50 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
                       </div>
                       <div>
@@ -306,12 +430,12 @@ ${searchForm.message}`;
                       </div>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">DÃ©crivez votre besoin *</label>
-                      <textarea required value={searchForm.message} onChange={e => setSearchForm({...searchForm, message: e.target.value})} rows={4} placeholder="Ex: Je cherche un terrain de 500m2 Ã à Coyah, budget max 50M GNF..." className="w-full px-4 py-2 bg-gray-50 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none resize-none"></textarea>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Décrivez votre besoin *</label>
+                      <textarea required value={searchForm.message} onChange={e => setSearchForm({...searchForm, message: e.target.value})} rows={4} placeholder="Ex: Je cherche un terrain de 500m2 à à Coyah, budget max 50M GNF..." className="w-full px-4 py-2 bg-gray-50 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none resize-none"></textarea>
                     </div>
                     
                     {searchStatus === 'error' && (
-                      <p className="text-red-500 text-sm">Une erreur est survenue. Veuillez rÃ©essayer.</p>
+                      <p className="text-red-500 text-sm">Une erreur est survenue. Veuillez réessayer.</p>
                     )}
                     
                     <div className="flex gap-3 pt-4">
