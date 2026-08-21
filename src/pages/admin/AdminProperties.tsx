@@ -234,7 +234,7 @@ const AdminProperties: React.FC = () => {
                 <select required name="status" value={formData.status || 'Disponible'} onChange={handleInputChange} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 bg-white">
                   <option value="Disponible">Disponible</option>
                   <option value="Vendu">Déjà  Vendu</option>
-                  <option value="Loué">Déjà  Loué</option>
+                  <option value="Louééé">Déjà  Louééé</option>
                 </select>
               </div>
 
@@ -281,7 +281,7 @@ const AdminProperties: React.FC = () => {
                             <input type="file" className="sr-only" accept="image/*" onChange={handleFileUpload} />
                           </label>
                         </div>
-                        <p className="text-xs text-gray-500">PNG, JPG, WEBP jusqu'à  5MB</p>
+                        <p className="text-xs text-gray-500">PNG, JPG, WEBP jusqu'ààà  5MB</p>
                       </>
                     )}
                   </div>
@@ -289,16 +289,16 @@ const AdminProperties: React.FC = () => {
               </div>
               
               <div className="col-span-full">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Galerie d'images additionnelles</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Galerie d'images àadditionnelles</label>
                   <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md relative hover:bg-gray-50 transition-colors">
                     <div className="space-y-1 text-center">
                       <div className="flex text-sm text-gray-600 justify-center">
                         <label className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-700 px-2 py-1">
-                          <span>Ajouter des images à  la galerie</span>
+                          <span>Ajouter des images àà  la galerie</span>
                           <input type="file" multiple className="sr-only" accept="image/*" onChange={handleGalleryUpload} />
                         </label>
                       </div>
-                      <p className="text-xs text-gray-500">Vous pouvez sélectionner plusieurs images en même temps</p>
+                      <p className="text-xs text-gray-500">Vous pouvez sélectionner plusieurs images àen même temps</p>
                     </div>
                   </div>
                   
@@ -429,7 +429,7 @@ const AdminProperties: React.FC = () => {
                     <td colSpan={5} className="p-12 text-center text-gray-500">
                       <Home className="mx-auto h-12 w-12 text-gray-300 mb-4" />
                       <p className="text-lg font-medium text-gray-900">Aucune offre immobilière</p>
-                      <p className="mt-1">Cliquez sur "Nouvelle Offre" pour commencer à  ajouter des biens.</p>
+                      <p className="mt-1">Cliquez sur "Nouvelle Offre" pour commencer ààà  ajouter des biens.</p>
                     </td>
                   </tr>
                 )}
@@ -443,5 +443,6 @@ const AdminProperties: React.FC = () => {
 };
 
 export default AdminProperties;
+
 
 

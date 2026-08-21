@@ -51,8 +51,8 @@ const SERVICES = [
     title: 'Coaching Immobilier',
     desc: "Investir dans l'immobilier demande des connaissances spécifiques que peu de gens possèdent. Nos coachs immobiliers certifiés vous transmettent leur expertise à travers des sessions personnalisées : stratégie d'investissement, analyse de rentabilité, gestion de patrimoine et fiscalité immobilière pour vous permettre de prendre des décisions éclairées.",
     bullets: [
-      "Stratégie d'investissement personnalisée",
-      "Analyse et calcul de rentabilité locative",
+      'Stratégie d'investissement personnalisée',
+      'Analyse et calcul de rentabilité locative',
       'Optimisation fiscale et patrimoniale',
       'Gestion de portefeuille immobilier',
       'Sessions individuelles ou en groupe',
@@ -84,7 +84,7 @@ const SERVICES = [
   },
 ];
 
-const WHY_US = [
+const FEATURES = [
   {
     icon: '💎',
     title: 'Transparence Totale',
@@ -102,16 +102,27 @@ const WHY_US = [
   },
 ];
 
+const PROPERTIES_SECTION = (
+  <div className="bg-gray-50 py-20">
+    <div className="max-w-7xl mx-auto px-4 md:px-8">
+      <div className="text-center max-w-3xl mx-auto mb-16">
+        <h2 className="title-font text-4xl font-bold text-gray-900 mb-6">Nos Offres Immobilières</h2>
+        <p className="text-lg text-gray-600 leading-relaxed">
+          Découvrez notre sélection de biens immobiliers vérifiés et certifiés. Que ce soit pour acheter, vendre ou louer, nous vous accompagnons à chaque étape.
+        </p>
+      </div>
+      <PropertiesList />
+    </div>
+  </div>
+);
+
 export default function SogipImmo() {
   return (
     <FilialePage
-      seo={{ title: "SOGIP IMMO — LePropio | Immobilier sans commission | SOGIP GROUP", description: "LePropio révolutionne l'immobilier en Guinée : vente sans commission, évaluation, accompagnement juridique et gestion locative." }}
       hero={HERO}
-      intro={"LePropio est la filiale immobilière du Groupe SOGIP. Notre mission : rendre l'immobilier accessible, transparent et rentable pour tous. En supprimant les intermédiaires coûteux et en plaçant la technologie au service de chaque transaction, nous transformons durablement le marché immobilier guinéen."}
       services={SERVICES}
-      whyUs={WHY_US}
-      galleryCategory="immo"
-      extra={<PropertiesList />}
+      features={FEATURES}
+      extra={PROPERTIES_SECTION}
     />
   );
 }

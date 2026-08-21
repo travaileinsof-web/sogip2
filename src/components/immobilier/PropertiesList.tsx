@@ -431,7 +431,7 @@ ${searchForm.message}`;
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Décrivez votre besoin *</label>
-                      <textarea required value={searchForm.message} onChange={e => setSearchForm({...searchForm, message: e.target.value})} rows={4} placeholder="Ex: Je cherche un terrain de 500m2 à à Coyah, budget max 50M GNF..." className="w-full px-4 py-2 bg-gray-50 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none resize-none"></textarea>
+                      <textarea required value={searchForm.message} onChange={e => setSearchForm({...searchForm, message: e.target.value})} rows={4} placeholder="Ex: Je cherche un terrain de 500m2 à àà Coyah, budget max 50M GNF..." className="w-full px-4 py-2 bg-gray-50 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none resize-none"></textarea>
                     </div>
                     
                     {searchStatus === 'error' && (

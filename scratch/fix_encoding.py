@@ -70,3 +70,5 @@ def fix_file(filepath):
 fix_file('src/pages/admin/AdminProperties.tsx')
 fix_file('src/components/immobilier/PropertiesList.tsx')
 print("Fix applied")
+
+fix_file('src/pages/filiales/SogipImmo.tsx')
