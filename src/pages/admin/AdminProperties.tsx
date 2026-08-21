@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
 import { Plus, Edit2, Trash2, Eye, EyeOff, AlertCircle, MapPin, Home } from 'lucide-react';
 import { api } from '../../services/api';
@@ -28,6 +28,7 @@ const AdminProperties: React.FC = () => {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [formData, setFormData] = useState<Partial<Property>>({});
   const [message, setMessage] = useState<{type: 'success' | 'error', text: string} | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     fetchProperties();
@@ -39,7 +40,7 @@ const AdminProperties: React.FC = () => {
       setProperties(response);
     } catch (error) {
       console.error('Failed to fetch properties', error);
-      setMessage({ type: 'error', text: 'Erreur lors du chargement des offres immobilières.' });
+      setMessage({ type: 'error', text: 'Erreur lors du chargement des offres immobiliÃ¨res.' });
     } finally {
       setLoading(false);
     }
@@ -68,7 +69,7 @@ const AdminProperties: React.FC = () => {
     const reader = new FileReader();
     reader.onloadend = () => {
       setFormData(prev => ({ ...prev, image: reader.result as string }));
-      setMessage({ type: 'success', text: 'Image importée avec succès !' });
+      setMessage({ type: 'success', text: 'Image importÃ©e avec succÃ¨s !' });
     };
     reader.onerror = () => {
       setMessage({ type: 'error', text: "Erreur lors de la lecture de l'image." });
@@ -78,31 +79,35 @@ const AdminProperties: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
     setMessage(null);
+    setIsSubmitting(true);
     try {
       if (editingId) {
         const response = await api.put(`/admin/properties/${editingId}`, formData);
         setProperties(properties.map(p => p.id === editingId ? response : p));
-        setMessage({ type: 'success', text: 'Offre mise à jour avec succès.' });
+        setMessage({ type: 'success', text: 'Offre mise Ã  jour avec succÃ¨s.' });
       } else {
         const response = await api.post('/admin/properties', formData);
         setProperties([response, ...properties]);
-        setMessage({ type: 'success', text: 'Offre ajoutée avec succès.' });
+        setMessage({ type: 'success', text: 'Offre ajoutÃ©e avec succÃ¨s.' });
       }
       setEditingId(null);
       setIsAdding(false);
       setFormData({});
     } catch (error: any) {
       setMessage({ type: 'error', text: error.message || 'Erreur lors de la sauvegarde.' });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (!window.confirm('Êtes-vous sûr de vouloir supprimer cette offre ?')) return;
+    if (!window.confirm('ÃŠtes-vous sÃ»r de vouloir supprimer cette offre ?')) return;
     try {
       await api.delete(`/admin/properties/${id}`);
       setProperties(properties.filter(p => p.id !== id));
-      setMessage({ type: 'success', text: 'Offre supprimée avec succès.' });
+      setMessage({ type: 'success', text: 'Offre supprimÃ©e avec succÃ¨s.' });
     } catch (error: any) {
       setMessage({ type: 'error', text: error.message || 'Erreur lors de la suppression.' });
     }
@@ -113,7 +118,7 @@ const AdminProperties: React.FC = () => {
       const response = await api.put(`/admin/properties/${property.id}/toggle`, { actif: !property.actif });
       setProperties(properties.map(p => p.id === property.id ? { ...p, actif: response.property.actif } : p));
     } catch (error) {
-      setMessage({ type: 'error', text: 'Erreur lors du changement de statut (visibilité).' });
+      setMessage({ type: 'error', text: 'Erreur lors du changement de statut (visibilitÃ©).' });
     }
   };
 
@@ -125,7 +130,7 @@ const AdminProperties: React.FC = () => {
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Immobilier (Le Proprio)</h1>
-            <p className="text-gray-500 mt-1">Gérez le catalogue des offres immobilières</p>
+            <p className="text-gray-500 mt-1">GÃ©rez le catalogue des offres immobiliÃ¨res</p>
           </div>
           {!isAdding && !editingId && (
             <button
@@ -148,20 +153,20 @@ const AdminProperties: React.FC = () => {
         {(isAdding || editingId) && (
           <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8 space-y-6">
             <h2 className="text-xl font-semibold text-gray-800 border-b pb-4 mb-4">
-              {isAdding ? 'Ajouter une Offre Immobilière' : 'Modifier l\'Offre'}
+              {isAdding ? 'Ajouter une Offre ImmobiliÃ¨re' : 'Modifier l\'Offre'}
             </h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <div className="col-span-full md:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-2">Titre de l'annonce</label>
-                <input required type="text" name="title" value={formData.title || ''} onChange={handleInputChange} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="ex: Magnifique Villa à Kipé" />
+                <input required type="text" name="title" value={formData.title || ''} onChange={handleInputChange} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="ex: Magnifique Villa Ã  KipÃ©" />
               </div>
               
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Localisation</label>
                 <div className="relative">
                   <MapPin className="absolute left-3 top-2.5 text-gray-400" size={18} />
-                  <input required type="text" name="location" value={formData.location || ''} onChange={handleInputChange} className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="ex: Kipé, Conakry" />
+                  <input required type="text" name="location" value={formData.location || ''} onChange={handleInputChange} className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="ex: KipÃ©, Conakry" />
                 </div>
               </div>
 
@@ -188,8 +193,8 @@ const AdminProperties: React.FC = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-2">Statut du bien</label>
                 <select required name="status" value={formData.status || 'Disponible'} onChange={handleInputChange} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 bg-white">
                   <option value="Disponible">Disponible</option>
-                  <option value="Vendu">Déjà Vendu</option>
-                  <option value="Loué">Déjà Loué</option>
+                  <option value="Vendu">DÃ©jÃ  Vendu</option>
+                  <option value="LouÃ©">DÃ©jÃ  LouÃ©</option>
                 </select>
               </div>
 
@@ -207,13 +212,13 @@ const AdminProperties: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Surface (m²) - Optionnel</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Surface (mÂ²) - Optionnel</label>
                 <input type="number" name="area" value={formData.area || ''} onChange={handleInputChange} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" min="0" placeholder="ex: 500" />
               </div>
 
               <div className="col-span-full">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Description détaillée</label>
-                <textarea required name="description" value={formData.description || ''} onChange={handleInputChange} rows={4} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Décrivez le bien en détail..."></textarea>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Description dÃ©taillÃ©e</label>
+                <textarea required name="description" value={formData.description || ''} onChange={handleInputChange} rows={4} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="DÃ©crivez le bien en dÃ©tail..."></textarea>
               </div>
 
               <div className="col-span-full">
@@ -222,7 +227,7 @@ const AdminProperties: React.FC = () => {
                   <div className="space-y-2 text-center">
                     {formData.image ? (
                       <div className="relative inline-block">
-                        <img src={formData.image} alt="Aperçu" className="max-h-48 rounded-lg mx-auto shadow-sm" />
+                        <img src={formData.image} alt="AperÃ§u" className="max-h-48 rounded-lg mx-auto shadow-sm" />
                         <button type="button" onClick={() => setFormData(prev => ({ ...prev, image: '' }))} className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-md hover:bg-red-600">
                           <Trash2 size={16} />
                         </button>
@@ -236,7 +241,7 @@ const AdminProperties: React.FC = () => {
                             <input type="file" className="sr-only" accept="image/*" onChange={handleFileUpload} />
                           </label>
                         </div>
-                        <p className="text-xs text-gray-500">PNG, JPG, WEBP jusqu'à 5MB</p>
+                        <p className="text-xs text-gray-500">PNG, JPG, WEBP jusqu'Ã  5MB</p>
                       </>
                     )}
                   </div>
@@ -247,8 +252,8 @@ const AdminProperties: React.FC = () => {
                 <label className="flex items-center gap-3 bg-gray-50 p-4 rounded-lg border cursor-pointer hover:bg-gray-100 transition-colors">
                   <input type="checkbox" name="actif" checked={formData.actif !== false} onChange={handleInputChange} className="w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500" />
                   <div>
-                    <span className="block font-medium text-gray-900">Publier l'offre immédiatement</span>
-                    <span className="block text-sm text-gray-500">Si décoché, l'offre sera sauvegardée mais invisible pour les visiteurs.</span>
+                    <span className="block font-medium text-gray-900">Publier l'offre immÃ©diatement</span>
+                    <span className="block text-sm text-gray-500">Si dÃ©cochÃ©, l'offre sera sauvegardÃ©e mais invisible pour les visiteurs.</span>
                   </div>
                 </label>
               </div>
@@ -258,9 +263,7 @@ const AdminProperties: React.FC = () => {
               <button type="button" onClick={() => { setIsAdding(false); setEditingId(null); setFormData({}); }} className="px-6 py-2 border rounded-lg text-gray-700 hover:bg-gray-50 font-medium transition-colors">
                 Annuler
               </button>
-              <button type="submit" className="px-6 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 font-medium transition-colors shadow-sm">
-                Enregistrer l'offre
-              </button>
+              <button type="submit" disabled={isSubmitting} className="px-6 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 font-medium transition-colors shadow-sm disabled:opacity-70 disabled:cursor-not-allowed">{isSubmitting ? "Enregistrement..." : "Enregistrer l'offre"}</button>
             </div>
           </form>
         )}
@@ -271,7 +274,7 @@ const AdminProperties: React.FC = () => {
               <thead className="bg-gray-50 border-b">
                 <tr>
                   <th className="p-4 font-semibold text-gray-600">Bien</th>
-                  <th className="p-4 font-semibold text-gray-600">Détails</th>
+                  <th className="p-4 font-semibold text-gray-600">DÃ©tails</th>
                   <th className="p-4 font-semibold text-gray-600">Prix</th>
                   <th className="p-4 font-semibold text-gray-600">Statut</th>
                   <th className="p-4 font-semibold text-gray-600 text-center">Actions</th>
@@ -315,7 +318,7 @@ const AdminProperties: React.FC = () => {
                             prop.actif ? 'bg-blue-50 text-blue-700 hover:bg-blue-100' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
                           }`}
                         >
-                          {prop.actif ? <><Eye size={14} /> Visible</> : <><EyeOff size={14} /> Masqué</>}
+                          {prop.actif ? <><Eye size={14} /> Visible</> : <><EyeOff size={14} /> MasquÃ©</>}
                         </button>
                       </div>
                     </td>
@@ -348,8 +351,8 @@ const AdminProperties: React.FC = () => {
                   <tr>
                     <td colSpan={5} className="p-12 text-center text-gray-500">
                       <Home className="mx-auto h-12 w-12 text-gray-300 mb-4" />
-                      <p className="text-lg font-medium text-gray-900">Aucune offre immobilière</p>
-                      <p className="mt-1">Cliquez sur "Nouvelle Offre" pour commencer à ajouter des biens.</p>
+                      <p className="text-lg font-medium text-gray-900">Aucune offre immobiliÃ¨re</p>
+                      <p className="mt-1">Cliquez sur "Nouvelle Offre" pour commencer Ã  ajouter des biens.</p>
                     </td>
                   </tr>
                 )}
@@ -363,3 +366,4 @@ const AdminProperties: React.FC = () => {
 };
 
 export default AdminProperties;
+

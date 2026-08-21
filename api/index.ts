@@ -639,7 +639,7 @@ app.put('/api/v1/admin/properties/:id/toggle', authenticate, async (req, res) =>
     const { actif } = req.body;
     
     const [property] = await db.update(properties).set({ actif }).where(eq(properties.id, Number(id))).returning();
-    res.json({ message: "Statut mis à jour", property });
+    res.json({ message: "Statut mis a jour", property });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Erreur serveur" });
@@ -651,7 +651,7 @@ app.delete('/api/v1/admin/properties/:id', authenticate, async (req, res) => {
     const db = getDb();
     const { id } = req.params;
     await db.delete(properties).where(eq(properties.id, Number(id)));
-    res.json({ message: "Propriété supprimée" });
+    res.json({ message: "Propriete supprimee" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Erreur serveur" });
