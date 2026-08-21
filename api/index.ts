@@ -1,4 +1,4 @@
-﻿import express from 'express';
+import express from 'express';
 import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
@@ -547,6 +547,114 @@ app.delete('/api/v1/admin/realizations/:id', authenticate, async (req, res) => {
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ message: 'Erreur serveur: ' + (error?.message || String(error)) });
+  }
+});
+
+// ==========================================
+// ROUTES IMMOBILIER (SOGIP IMMO)
+// ==========================================
+
+app.get('/api/v1/properties', async (req, res) => {
+  res.setHeader('Cache-Control', 'no-store, max-age=0');
+  try {
+    const db = getDb();
+    const result = await db.select().from(properties).where(eq(properties.actif, true)).orderBy(desc(properties.createdAt));
+    res.json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+});
+
+app.get('/api/v1/admin/properties', authenticate, async (req, res) => {
+  try {
+    const db = getDb();
+    const result = await db.select().from(properties).orderBy(desc(properties.createdAt));
+    res.json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+});
+
+app.post('/api/v1/admin/properties', authenticate, async (req, res) => {
+  try {
+    const db = getDb();
+    const { title, description, propertyType, transactionType, status, price, currency, location, area, image, gallery, features } = req.body;
+    
+    const [property] = await db.insert(properties).values({
+      title,
+      description,
+      propertyType,
+      transactionType,
+      status: status || 'Disponible',
+      price: Number(price),
+      currency: currency || 'GNF',
+      location,
+      area: area ? Number(area) : null,
+      image,
+      gallery: gallery ? JSON.stringify(gallery) : null,
+      features: features ? JSON.stringify(features) : null,
+    }).returning();
+    
+    res.status(201).json(property);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+});
+
+app.put('/api/v1/admin/properties/:id', authenticate, async (req, res) => {
+  try {
+    const db = getDb();
+    const { id } = req.params;
+    const { title, description, propertyType, transactionType, status, price, currency, location, area, image, gallery, features } = req.body;
+    
+    const [property] = await db.update(properties).set({
+      title,
+      description,
+      propertyType,
+      transactionType,
+      status,
+      price: Number(price),
+      currency,
+      location,
+      area: area ? Number(area) : null,
+      image,
+      gallery: gallery ? (typeof gallery === 'string' ? gallery : JSON.stringify(gallery)) : null,
+      features: features ? (typeof features === 'string' ? features : JSON.stringify(features)) : null,
+    }).where(eq(properties.id, Number(id))).returning();
+    
+    res.json(property);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+});
+
+app.put('/api/v1/admin/properties/:id/toggle', authenticate, async (req, res) => {
+  try {
+    const db = getDb();
+    const { id } = req.params;
+    const { actif } = req.body;
+    
+    const [property] = await db.update(properties).set({ actif }).where(eq(properties.id, Number(id))).returning();
+    res.json({ message: "Statut mis à jour", property });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+});
+
+app.delete('/api/v1/admin/properties/:id', authenticate, async (req, res) => {
+  try {
+    const db = getDb();
+    const { id } = req.params;
+    await db.delete(properties).where(eq(properties.id, Number(id)));
+    res.json({ message: "Propriété supprimée" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Erreur serveur" });
   }
 });
 
