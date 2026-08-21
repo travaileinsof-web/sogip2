@@ -1,10 +1,10 @@
-import express from 'express';
+﻿import express from 'express';
 import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
 import cors from 'cors';
 import { getDb } from './db/index.js';
-import { users, formations, contacts, media, pages, products, settings, realizations } from './db/schema.js';
+import { users, formations, contacts, media, pages, products, settings, realizations , properties } from './db/schema.js';
 import { eq, desc } from 'drizzle-orm';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
@@ -76,7 +76,7 @@ app.post('/api/v1/admin/upload', authenticate, upload.single('image'), (req: any
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 10,
-  message: { message: 'Trop de tentatives. Réessayez dans 15 minutes.' },
+  message: { message: 'Trop de tentatives. RÃ©essayez dans 15 minutes.' },
   standardHeaders: true,
   legacyHeaders: false,
 });
@@ -144,12 +144,12 @@ app.post('/api/v1/contacts', async (req, res) => {
       name: `${prenom} ${nom}`.trim(),
       email,
       subject: sujet || 'Contact depuis le site',
-      message: `Téléphone: ${telephone || 'Non renseigné'}\nFiliale: ${filiale || 'Non renseignée'}\n\n${message}`,
+      message: `TÃ©lÃ©phone: ${telephone || 'Non renseignÃ©'}\nFiliale: ${filiale || 'Non renseignÃ©e'}\n\n${message}`,
       status: 'nouveau',
       read: false
     });
     
-    res.json({ success: true, message: 'Message envoyé avec succès' });
+    res.json({ success: true, message: 'Message envoyÃ© avec succÃ¨s' });
   } catch (error: any) {
     console.error('Erreur POST /contacts:', error);
     res.status(500).json({ success: false, message: 'Erreur serveur' });
@@ -551,3 +551,4 @@ app.delete('/api/v1/admin/realizations/:id', authenticate, async (req, res) => {
 });
 
 export default app;
+

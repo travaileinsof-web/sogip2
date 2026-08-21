@@ -149,18 +149,23 @@ const Contact: React.FC = () => {
               {/* Réseaux Sociaux */}
               <div className="flex items-start gap-4 pt-6 border-t border-slate-100">
                 
-                <div className="flex gap-4">
+                <div className="flex flex-wrap gap-6">
                   {socials.map((social: any, i: number) => (
-                    <a key={i} href={social.url} target="_blank" rel="noopener noreferrer" aria-label={social.platform} title={social.platform} className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-blue-600 hover:text-white transition-colors">
-                      {social.platform.toLowerCase().includes('facebook') ? (
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-                      ) : social.platform.toLowerCase().includes('linkedin') ? (
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-                      ) : social.platform.toLowerCase().includes('tiktok') ? (
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
-                      ) : (
-                        <span className="font-bold">{social.platform.substring(0, 1).toUpperCase()}</span>
-                      )}
+                    <a key={i} href={social.url} target="_blank" rel="noopener noreferrer" aria-label={social.platform} title={social.platform} className="flex flex-col items-center gap-2 group">
+                      <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 group-hover:bg-blue-600 group-hover:text-white transition-colors shadow-sm">
+                        {social.platform.toLowerCase().includes('facebook') ? (
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                        ) : social.platform.toLowerCase().includes('linkedin') ? (
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                        ) : social.platform.toLowerCase().includes('tiktok') ? (
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
+                        ) : (
+                          <span className="font-bold">{social.platform.substring(0, 1).toUpperCase()}</span>
+                        )}
+                      </div>
+                      <span className="text-xs font-semibold text-slate-500 group-hover:text-blue-700 text-center max-w-[80px] leading-tight">
+                        {social.platform}
+                      </span>
                     </a>
                   ))}
                 </div>

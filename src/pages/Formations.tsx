@@ -50,7 +50,8 @@ const Formations: React.FC = () => {
             price: curr.price,
             desc: curr.description,
             image: curr.image,
-            mode: curr.mode
+            mode: curr.mode,
+            whatsappLink: curr.whatsappLink
           });
           return acc;
         }, {});
@@ -92,7 +93,8 @@ const Formations: React.FC = () => {
     e.preventDefault();
     if (!selectedCourse) return;
 
-    const companyPhone = "224620521249";
+    let whatsappUrl = '';
+    const customLink = selectedCourse.whatsappLink;
     const textMessage = `Bonjour, je souhaite m'inscrire à la formation : *${selectedCourse.title}*.\n\n` +
                         `*Mes informations :*\n` +
                         `- Nom complet : ${formData.name}\n` +
@@ -101,7 +103,29 @@ const Formations: React.FC = () => {
                         `Merci de m'indiquer la marche à suivre pour finaliser mon inscription.`;
 
     const encodedMessage = encodeURIComponent(textMessage);
-    const whatsappUrl = `https://wa.me/${companyPhone}?text=${encodedMessage}`;
+
+    if (customLink) {
+      if (customLink.includes('chat.whatsapp.com')) {
+        // Lien de groupe : on redirige directement sans ajouter de texte
+        whatsappUrl = customLink;
+      } else if (customLink.includes('wa.me')) {
+        // Lien direct (wa.me) : on tente d'ajouter le texte si possible
+        whatsappUrl = customLink.includes('?') 
+          ? `${customLink}&text=${encodedMessage}`
+          : `${customLink}?text=${encodedMessage}`;
+      } else if (/^\+?[0-9\s]+$/.test(customLink)) {
+        // Juste un numéro de téléphone
+        const cleanNumber = customLink.replace(/[^0-9]/g, '');
+        whatsappUrl = `https://wa.me/${cleanNumber}?text=${encodedMessage}`;
+      } else {
+        // Autre type de lien (fallback)
+        whatsappUrl = customLink;
+      }
+    } else {
+      // Par défaut
+      const companyPhone = "224620521249";
+      whatsappUrl = `https://wa.me/${companyPhone}?text=${encodedMessage}`;
+    }
 
     window.open(whatsappUrl, '_blank');
     handleCloseModal();

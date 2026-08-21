@@ -18,6 +18,7 @@ export const formations = pgTable('formations', {
   description: text('description').notNull(),
   image: text('image').notNull(),
   mode: varchar('mode', { length: 50 }).default('Présentiel'),
+  whatsappLink: varchar('whatsapp_link', { length: 500 }),
   actif: boolean('actif').default(true),
   createdAt: timestamp('created_at').defaultNow()
 });
@@ -72,5 +73,23 @@ export const realizations = pgTable('realizations', {
   title: varchar('title', { length: 255 }),
   category: varchar('category', { length: 255 }).notNull(),
   image: text('image').notNull(),
+  createdAt: timestamp('created_at').defaultNow()
+});
+
+export const properties = pgTable('properties', {
+  id: serial('id').primaryKey(),
+  title: varchar('title', { length: 255 }).notNull(),
+  description: text('description').notNull(),
+  propertyType: varchar('property_type', { length: 50 }).notNull(), // Terrain, Appartement, Immeuble, etc.
+  transactionType: varchar('transaction_type', { length: 50 }).notNull(), // Vente, Location
+  status: varchar('status', { length: 50 }).default('Disponible'), // Disponible, Vendu, Loué
+  price: integer('price').notNull(),
+  currency: varchar('currency', { length: 10 }).default('GNF'),
+  location: varchar('location', { length: 255 }).notNull(),
+  area: integer('area'), // Surface en m2
+  image: text('image').notNull(),
+  gallery: text('gallery'), // JSON array of additional images
+  features: text('features'), // JSON array or text of features
+  actif: boolean('actif').default(true),
   createdAt: timestamp('created_at').defaultNow()
 });

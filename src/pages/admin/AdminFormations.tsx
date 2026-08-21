@@ -12,6 +12,7 @@ interface Formation {
   description: string;
   image: string;
   mode?: string;
+  whatsappLink?: string;
   actif: boolean;
 }
 
@@ -221,6 +222,19 @@ const AdminFormations: React.FC = () => {
                 {formData.price !== undefined && inputCurrency !== 'EUR' && (
                   <p className="text-xs text-gray-500 mt-1">Équivalent stocké : {formData.price} EUR</p>
                 )}
+              </div>
+
+              <div className="col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Lien WhatsApp d'inscription (Optionnel)</label>
+                <input
+                  type="text"
+                  name="whatsappLink"
+                  value={formData.whatsappLink || ''}
+                  onChange={handleInputChange}
+                  placeholder="Ex: https://chat.whatsapp.com/... ou +224600000000"
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                />
+                <p className="text-xs text-gray-500 mt-1">Laissez vide pour utiliser le contact WhatsApp par défaut. Indiquez un lien de groupe ou un numéro.</p>
               </div>
 
               <div className="col-span-2">

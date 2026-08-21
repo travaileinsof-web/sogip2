@@ -20,6 +20,7 @@ import AdminMedia from './pages/admin/AdminMedia';
 import AdminContacts from './pages/admin/AdminContacts';
 import AdminFormations from './pages/admin/AdminFormations';
 import AdminProducts from './pages/admin/AdminProducts';
+import AdminProperties from './pages/admin/AdminProperties';
 import AdminSettings from './pages/admin/AdminSettings';
 import AdminRealizations from './pages/admin/AdminRealizations';
 
@@ -65,6 +66,7 @@ const AnimatedRoutes = () => {
         <Route path="/admin/contacts" element={<PrivateRoute><AdminContacts /></PrivateRoute>} />
         <Route path="/admin/formations" element={<PrivateRoute><AdminFormations /></PrivateRoute>} />
         <Route path="/admin/products" element={<PrivateRoute><AdminProducts /></PrivateRoute>} />
+        <Route path="/admin/properties" element={<PrivateRoute><AdminProperties /></PrivateRoute>} />
         <Route path="/admin/realizations" element={<PrivateRoute><AdminRealizations /></PrivateRoute>} />
         <Route path="/admin/settings" element={<PrivateRoute><AdminSettings /></PrivateRoute>} />
         <Route path="*" element={<Layout><NotFound /></Layout>} />

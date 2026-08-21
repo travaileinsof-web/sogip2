@@ -2,6 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { usePageData } from '../hooks/usePageData';
 
+const parseArray = (str: any, defaultArr: any[]) => {
+  if (!str) return defaultArr;
+  try {
+    const parsed = JSON.parse(str);
+    return Array.isArray(parsed) ? parsed : [str];
+  } catch {
+    return [str];
+  }
+};
+
 interface LayoutProps {
   children: React.ReactNode;
 }
@@ -10,6 +20,23 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
   const { data: contactData } = usePageData('contact');
+  const [settings, setSettings] = useState<any>({});
+
+  useEffect(() => {
+    import('../services/api').then(({ api }) => {
+      api.get('/settings').then(res => setSettings(res)).catch(console.error);
+    });
+  }, []);
+
+  const emails = parseArray(settings.contact_emails || settings.contact_email, ['camus@sogipgroup.com', 'sogipinfos@sogipgroup.com']);
+  const phones = parseArray(settings.contact_phones || settings.contact_phone, ['+224 620 52 12 49']);
+  const address = settings.contact_address || contactData?.info?.adresse || "Bluezone de Dixinn, Conakry, Guinée";
+  const socials = parseArray(settings.socials, [
+    { platform: 'Facebook', url: settings.social_facebook || contactData?.info?.facebook || "https://facebook.com/SogipGroup" },
+    { platform: 'LinkedIn', url: settings.social_linkedin || contactData?.info?.linkedin || "https://linkedin.com/company/sogipgroup" },
+    { platform: 'TikTok', url: settings.social_tiktok || contactData?.info?.tiktok || "https://tiktok.com/@sogipgroup" }
+  ]).filter((s: any) => s.url);
+  const primaryPhone = (phones[0] || "+224620521249").replace(/\D/g, '');
 
   useEffect(() => {
     setIsMenuOpen(false);
@@ -164,24 +191,40 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <div>
             <h4 className="font-semibold text-lg mb-4 text-amber-500">Contact</h4>
             <ul className="space-y-2 text-sm text-slate-400">
-              <li><a href="mailto:camus@sogipgroup.com" className="hover:text-amber-400 transition-colors">camus@sogipgroup.com</a></li>
-              <li><a href="mailto:sogipinfos@sogipgroup.com" className="hover:text-amber-400 transition-colors">sogipinfos@sogipgroup.com</a></li>
-              <li>{contactData?.info?.telephone || "+224 620 52 12 49"}</li>
-              <li>{contactData?.info?.adresse || "Bluezone de Dixinn, Conakry, Guinée"}</li>
+              {emails.map((email: string, i: number) => (
+                <li key={`email-${i}`}><a href={`mailto:${email}`} className="hover:text-amber-400 transition-colors">{email}</a></li>
+              ))}
+              {phones.map((phone: string, i: number) => (
+                <li key={`phone-${i}`}>{phone}</li>
+              ))}
+              <li>{address}</li>
             </ul>
           </div>
           <div>
             <h4 className="font-semibold text-lg mb-4 text-amber-500">Réseaux Sociaux</h4>
-            <div className="flex gap-4">
-              <a href={contactData?.info?.facebook || "https://facebook.com/SogipGroup"} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="bg-slate-800 p-2 rounded-full hover:bg-amber-500 hover:text-white transition-colors text-slate-400">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-              </a>
-              <a href={contactData?.info?.linkedin || "https://linkedin.com/company/sogipgroup"} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="bg-slate-800 p-2 rounded-full hover:bg-amber-500 hover:text-white transition-colors text-slate-400">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-              </a>
-              <a href={contactData?.info?.tiktok || "https://tiktok.com/@sogipgroup"} target="_blank" rel="noopener noreferrer" aria-label="TikTok" className="bg-slate-800 p-2 rounded-full hover:bg-amber-500 hover:text-white transition-colors text-slate-400">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
-              </a>
+            <div className="flex flex-wrap gap-4">
+              {socials.map((social: any, i: number) => {
+                let icon;
+                if (social.platform.toLowerCase().includes('facebook')) {
+                  icon = <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>;
+                } else if (social.platform.toLowerCase().includes('linkedin')) {
+                  icon = <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>;
+                } else if (social.platform.toLowerCase().includes('tiktok')) {
+                  icon = <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>;
+                } else {
+                  icon = <span className="font-bold">{social.platform.substring(0, 1).toUpperCase()}</span>;
+                }
+                return (
+                  <a key={i} href={social.url} target="_blank" rel="noopener noreferrer" aria-label={social.platform} className="flex flex-col items-center gap-1.5 group">
+                    <div className="bg-slate-800 p-2.5 rounded-full group-hover:bg-amber-500 group-hover:text-white transition-colors text-slate-400">
+                      {icon}
+                    </div>
+                    <span className="text-[11px] font-medium text-slate-400 group-hover:text-amber-400 text-center max-w-[65px] leading-tight">
+                      {social.platform}
+                    </span>
+                  </a>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -193,7 +236,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
       {/* WHATSAPP WIDGET */}
       <a 
-        href="https://wa.me/224620521249" 
+        href={`https://wa.me/${primaryPhone}`} 
         target="_blank" 
         rel="noopener noreferrer" 
         className="fixed bottom-6 right-6 bg-green-500 text-white p-4 rounded-full shadow-[0_0_20px_rgba(34,197,94,0.4)] hover:bg-green-400 transition-transform hover:scale-110 z-50 flex items-center justify-center group"

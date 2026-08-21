@@ -8,7 +8,8 @@ import {
   GraduationCap, 
   LogOut,
   Settings,
-  ShoppingBag
+  ShoppingBag,
+  Home
 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -36,8 +37,10 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     { name: 'Paramètres', path: '/admin/settings', icon: <Settings size={20} /> },
     { name: 'Formations', path: '/admin/formations', icon: <GraduationCap size={20} /> },
     { name: 'Produits (Soleil)', path: '/admin/products', icon: <ShoppingBag size={20} /> },
+    { name: 'Immobilier', path: '/admin/properties', icon: <Home size={20} /> },
     { name: 'Réalisations', path: '/admin/realizations', icon: <ImageIcon size={20} /> },
     { name: 'Messages', path: '/admin/contacts', icon: <MessageSquare size={20} /> },
+    { name: 'Médias', path: '/admin/media', icon: <ImageIcon size={20} /> },
   ];
 
   if (isLoading) {
