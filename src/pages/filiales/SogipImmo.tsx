@@ -51,7 +51,7 @@ const SERVICES = [
     title: 'Coaching Immobilier',
     desc: "Investir dans l'immobilier demande des connaissances spécifiques que peu de gens possèdent. Nos coachs immobiliers certifiés vous transmettent leur expertise à travers des sessions personnalisées : stratégie d'investissement, analyse de rentabilité, gestion de patrimoine et fiscalité immobilière pour vous permettre de prendre des décisions éclairées.",
     bullets: [
-      'Stratégie d'investissement personnalisée',
+      "Stratégie d'investissement personnalisée",
       'Analyse et calcul de rentabilité locative',
       'Optimisation fiscale et patrimoniale',
       'Gestion de portefeuille immobilier',
