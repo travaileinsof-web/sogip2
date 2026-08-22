@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import sys
+
+code = """import React, { useState, useEffect } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
 import { Plus, Edit2, Trash2, Eye, EyeOff, MapPin, Home, X, Upload } from 'lucide-react';
 import { api } from '../../services/api';
@@ -290,7 +292,7 @@ export default function AdminProperties() {
 
         {showForm ? (
           <div className="bg-gray-50 p-6 rounded-xl border mb-8">
-            <h3 className="text-lg font-bold mb-4">{formData.id ? 'Modifier l'Offre' : 'Ajouter une Offre'}</h3>
+            <h3 className="text-lg font-bold mb-4">{formData.id ? 'Modifier l\'Offre' : 'Ajouter une Offre'}</h3>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 
@@ -386,7 +388,7 @@ export default function AdminProperties() {
                     <label className="flex-1 border-2 border-dashed border-emerald-300 bg-emerald-50 rounded-lg p-6 text-center cursor-pointer hover:bg-emerald-100 transition-colors">
                       <input type="file" className="sr-only" accept="image/*" onChange={handleImageUpload} />
                       <Upload className="mx-auto h-8 w-8 text-emerald-500 mb-2" />
-                      <span className="text-emerald-700 font-medium">{formData.image ? 'Changer l'image principale' : 'Sélectionner l'image principale'}</span>
+                      <span className="text-emerald-700 font-medium">{formData.image ? 'Changer l\'image principale' : 'Sélectionner l\'image principale'}</span>
                       <p className="text-xs text-gray-500 mt-1">Image qui apparaîtra sur la carte</p>
                     </label>
                   </div>
@@ -426,7 +428,7 @@ export default function AdminProperties() {
               <div className="flex justify-end gap-4 pt-4 border-t">
                 <button type="button" onClick={() => setShowForm(false)} className="px-6 py-2 border rounded-lg hover:bg-gray-50">Annuler</button>
                 <button type="submit" disabled={isSubmitting} className={`px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 ${isSubmitting ? 'opacity-50' : ''}`}>
-                  {isSubmitting ? 'Enregistrement...' : 'Enregistrer l'offre'}
+                  {isSubmitting ? 'Enregistrement...' : 'Enregistrer l\'offre'}
                 </button>
               </div>
             </form>
@@ -495,3 +497,9 @@ export default function AdminProperties() {
     </AdminLayout>
   );
 }
+"""
+
+with open('src/pages/admin/AdminProperties.tsx', 'w', encoding='utf-8') as f:
+    f.write(code)
+
+print("Updated AdminProperties.tsx")

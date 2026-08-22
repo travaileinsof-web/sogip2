@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import sys
+
+code = """import React, { useState, useEffect } from 'react';
 import { MapPin, Search, Phone, Home, BedDouble, Bath, Square, Droplet, Zap, Shield, Car, CheckCircle } from 'lucide-react';
 import { api } from '../../services/api';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -348,3 +350,9 @@ ${contactForm.message}`;
     </div>
   );
 }
+"""
+
+with open('src/components/immobilier/PropertiesList.tsx', 'w', encoding='utf-8') as f:
+    f.write(code)
+
+print("Updated PropertiesList.tsx")

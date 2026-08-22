@@ -580,22 +580,25 @@ app.get('/api/v1/admin/properties', authenticate, async (req, res) => {
 app.post('/api/v1/admin/properties', authenticate, async (req, res) => {
   try {
     const db = getDb();
-    const { title, description, propertyType, transactionType, status, price, currency, location, area, image, gallery, features } = req.body;
-    
-    const [property] = await db.insert(properties).values({
-      title,
-      description,
-      propertyType,
-      transactionType,
-      status: status || 'Disponible',
-      price: Number(price),
-      currency: currency || 'GNF',
-      location,
-      area: area ? Number(area) : null,
-      image,
-      gallery: gallery ? JSON.stringify(gallery) : null,
-      features: features ? JSON.stringify(features) : null,
-    }).returning();
+    const { title, description, propertyType, transactionType, status, price, currency, location, city, neighborhood, area, image, gallery, features, specifications } = req.body;
+      
+      const [property] = await db.insert(properties).values({
+        title,
+        description,
+        propertyType,
+        transactionType,
+        status: status || 'Disponible',
+        price: Number(price),
+        currency: currency || 'GNF',
+        location,
+        city,
+        neighborhood,
+        area: area ? Number(area) : null,
+        image,
+        gallery: gallery ? (typeof gallery === 'string' ? gallery : JSON.stringify(gallery)) : null,
+        features: features ? (typeof features === 'string' ? features : JSON.stringify(features)) : null,
+        specifications: specifications ? (typeof specifications === 'string' ? specifications : JSON.stringify(specifications)) : null,
+      }).returning();
     
     res.status(201).json(property);
   } catch (error) {
@@ -608,22 +611,25 @@ app.put('/api/v1/admin/properties/:id', authenticate, async (req, res) => {
   try {
     const db = getDb();
     const { id } = req.params;
-    const { title, description, propertyType, transactionType, status, price, currency, location, area, image, gallery, features } = req.body;
-    
-    const [property] = await db.update(properties).set({
-      title,
-      description,
-      propertyType,
-      transactionType,
-      status,
-      price: Number(price),
-      currency,
-      location,
-      area: area ? Number(area) : null,
-      image,
-      gallery: gallery ? (typeof gallery === 'string' ? gallery : JSON.stringify(gallery)) : null,
-      features: features ? (typeof features === 'string' ? features : JSON.stringify(features)) : null,
-    }).where(eq(properties.id, Number(id))).returning();
+    const { title, description, propertyType, transactionType, status, price, currency, location, city, neighborhood, area, image, gallery, features, specifications } = req.body;
+      
+      const [property] = await db.update(properties).set({
+        title,
+        description,
+        propertyType,
+        transactionType,
+        status,
+        price: Number(price),
+        currency,
+        location,
+        city,
+        neighborhood,
+        area: area ? Number(area) : null,
+        image,
+        gallery: gallery ? (typeof gallery === 'string' ? gallery : JSON.stringify(gallery)) : null,
+        features: features ? (typeof features === 'string' ? features : JSON.stringify(features)) : null,
+        specifications: specifications ? (typeof specifications === 'string' ? specifications : JSON.stringify(specifications)) : null,
+      }).where(eq(properties.id, Number(id))).returning();
     
     res.json(property);
   } catch (error) {
