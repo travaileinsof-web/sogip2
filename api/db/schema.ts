@@ -86,10 +86,13 @@ export const properties = pgTable('properties', {
   price: integer('price').notNull(),
   currency: varchar('currency', { length: 10 }).default('GNF'),
   location: varchar('location', { length: 255 }).notNull(),
-  area: integer('area'), // Surface en m2
-  image: text('image').notNull(),
-  gallery: text('gallery'), // JSON array of additional images
-  features: text('features'), // JSON array or text of features
+    city: varchar('city', { length: 100 }),
+    neighborhood: varchar('neighborhood', { length: 100 }),
+    area: integer('area'), // Surface en m2
+    image: text('image').notNull(),
+    gallery: text('gallery'), // JSON array of additional images
+    features: text('features'), // JSON array or text of features
+    specifications: text('specifications'), // JSON object of dynamic properties (rooms, floors, etc)
   actif: boolean('actif').default(true),
   createdAt: timestamp('created_at').defaultNow()
 });
