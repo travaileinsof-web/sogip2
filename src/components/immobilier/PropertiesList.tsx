@@ -316,6 +316,12 @@ ${contactForm.message}`;
                         {specs.gardiennage && <div className="flex items-center text-emerald-700 font-medium"><Shield className="mr-2 text-emerald-500" size={18} /> Gardiennage</div>}
                         {specs.parking && <div className="flex items-center text-emerald-700 font-medium"><Car className="mr-2 text-emerald-500" size={18} /> Parking / Garage</div>}
                         {specs.titre_foncier && <div className="flex items-center text-emerald-700 font-medium"><CheckCircle className="mr-2 text-emerald-500" size={18} /> Titre Foncier</div>}
+              {specs.chauffage_eau && <div className="flex items-center gap-1.5"><Thermometer size={16} /> Chauffe-eau</div>}
+              {specs.electricite && <div className="flex items-center gap-1.5"><Zap size={16} /> Électricité</div>}
+              {specs.cloture && <div className="flex items-center gap-1.5"><Shield size={16} /> Clôturé</div>}
+              {specs.electrifie && <div className="flex items-center gap-1.5"><Zap size={16} /> Zone Électrifiée</div>}
+              {specs.documents_ok && <div className="flex items-center gap-1.5"><FileCheck size={16} /> Documents au point</div>}
+
                         {specs.cloture && <div className="flex items-center text-emerald-700 font-medium"><CheckCircle className="mr-2 text-emerald-500" size={18} /> Clôturé</div>}
                       </div>
                     </div>
