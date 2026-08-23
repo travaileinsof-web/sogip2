@@ -70,12 +70,34 @@ export default function PropertiesList() {
     setShowContactModal(true);
   };
 
-  const submitContact = async (e: React.FormEvent) => {
+    const submitContact = async (e: React.FormEvent) => {
     e.preventDefault();
+    try {
+      // 1. Envoyer les infos dans la boite du dashboard admin
+      const names = contactForm.name.split(' ');
+      const nom = names.length > 1 ? names.slice(1).join(' ') : contactForm.name;
+      const prenom = names[0];
+      
+      await api.post('/contacts', {
+        nom: nom,
+        prenom: prenom,
+        email: contactForm.email || 'non.renseigne@email.com',
+        telephone: contactForm.phone,
+        sujet: 'Intérêt pour une offre immobilière (Le Proprio)',
+        filiale: 'SOGIP IMMO',
+        message: contactForm.message
+      });
+      
+    } catch (error) {
+      console.error('Erreur lors de l\'envoi au dashboard', error);
+    }
+
+    // 2. Rediriger vers WhatsApp
     const whatsappMessage = `*Nouvelle Demande SOGIP IMMO*
 Nom: ${contactForm.name}
+Email: ${contactForm.email}
 Téléphone: ${contactForm.phone}
-  
+
 ${contactForm.message}`;
     const whatsappLink = `https://wa.me/224620521249?text=${encodeURIComponent(whatsappMessage)}`;
     window.open(whatsappLink, '_blank');
@@ -332,6 +354,7 @@ ${contactForm.message}`;
               <form onSubmit={submitContact} className="space-y-4">
                 <div><label className="block text-sm font-medium text-gray-700 mb-1">Votre Nom complet *</label><input required type="text" value={contactForm.name} onChange={e => setContactForm(prev => ({...prev, name: e.target.value}))} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="Jean Dupont" /></div>
                 <div><label className="block text-sm font-medium text-gray-700 mb-1">Votre Numéro de Téléphone *</label><input required type="tel" value={contactForm.phone} onChange={e => setContactForm(prev => ({...prev, phone: e.target.value}))} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="+224 620 00 00 00" /></div>
+                  <div><label className="block text-sm font-medium text-gray-700 mb-1">Votre Email *</label><input required type="email" value={contactForm.email} onChange={e => setContactForm(prev => ({...prev, email: e.target.value}))} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="jean@email.com" /></div>
                 <div><label className="block text-sm font-medium text-gray-700 mb-1">Message</label><textarea required value={contactForm.message} onChange={e => setContactForm(prev => ({...prev, message: e.target.value}))} rows={4} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"></textarea></div>
                 <div className="flex gap-4 pt-2">
                   <button type="button" onClick={() => setShowContactModal(false)} className="flex-1 py-3 rounded-xl font-bold text-gray-600 hover:bg-gray-100 transition-colors">Annuler</button>
