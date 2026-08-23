@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MapPin, Search, Phone, Home, BedDouble, Bath, Square, Droplet, Zap, Shield, Car, CheckCircle, Layers, Thermometer, FileCheck } from 'lucide-react';
+import { MapPin, Search, Phone, Home, BedDouble, Bath, Square, Droplet, Zap, Shield, Car, CheckCircle } from 'lucide-react';
 import { api } from '../../services/api';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -55,11 +55,15 @@ export default function PropertiesList() {
   }, []);
 
   const formatPrice = (price: number, currency: string) => {
-    return new Intl.NumberFormat('fr-GN', { 
-      style: 'currency', 
-      currency: currency || 'GNF',
-      maximumFractionDigits: 0
-    }).format(price);
+    try {
+      return new Intl.NumberFormat('fr-GN', { 
+        style: 'currency', 
+        currency: currency && currency !== 'null' ? currency : 'GNF',
+        maximumFractionDigits: 0
+      }).format(price);
+    } catch (e) {
+      return `${price.toLocaleString('fr-GN')} GNF`;
+    }
   };
 
   const handleInterested = (property: Property) => {
@@ -310,7 +314,7 @@ ${contactForm.message}`;
                         {specs.douches && <div className="flex items-center text-gray-700"><Bath className="mr-2 text-gray-400" size={18} /> {specs.douches} Douches</div>}
                         {specs.toilettes && <div className="flex items-center text-gray-700"><Bath className="mr-2 text-gray-400" size={18} /> {specs.toilettes} Toilettes</div>}
                         {specs.balcons && <div className="flex items-center text-gray-700"><Square className="mr-2 text-gray-400" size={18} /> {specs.balcons} Balcons</div>}
-                        {specs.etages && <div className="flex items-center text-gray-700"><Layers className="mr-2 text-gray-400" size={18} /> Niveaux : {specs.etages}</div>}
+                        {specs.etages && <div className="flex items-center text-gray-700"><Home className="mr-2 text-gray-400" size={18} /> Niveaux : {specs.etages}</div>}
                         
                         {/* Checkboxes Booleans */}
                         {specs.forage && <div className="flex items-center text-emerald-700 font-medium"><Droplet className="mr-2 text-emerald-500" size={18} /> Forage (Eau)</div>}
@@ -318,10 +322,12 @@ ${contactForm.message}`;
                         {specs.gardiennage && <div className="flex items-center text-emerald-700 font-medium"><Shield className="mr-2 text-emerald-500" size={18} /> Gardiennage</div>}
                         {specs.parking && <div className="flex items-center text-emerald-700 font-medium"><Car className="mr-2 text-emerald-500" size={18} /> Parking / Garage</div>}
                         {specs.titre_foncier && <div className="flex items-center text-emerald-700 font-medium"><CheckCircle className="mr-2 text-emerald-500" size={18} /> Titre Foncier</div>}
-                        {specs.chauffage_eau && <div className="flex items-center text-emerald-700 font-medium"><Thermometer className="mr-2 text-emerald-500" size={18} /> Chauffe-eau</div>}
-                        {specs.electricite && <div className="flex items-center text-emerald-700 font-medium"><Zap className="mr-2 text-emerald-500" size={18} /> Électricité</div>}
-                        {specs.electrifie && <div className="flex items-center text-emerald-700 font-medium"><Zap className="mr-2 text-emerald-500" size={18} /> Zone Électrifiée</div>}
-                        {specs.documents_ok && <div className="flex items-center text-emerald-700 font-medium"><FileCheck className="mr-2 text-emerald-500" size={18} /> Documents au point</div>}
+              {specs.chauffage_eau && <div className="flex items-center gap-1.5"><Thermometer size={16} /> Chauffe-eau</div>}
+              {specs.electricite && <div className="flex items-center gap-1.5"><Zap size={16} /> Électricité</div>}
+              {specs.cloture && <div className="flex items-center gap-1.5"><Shield size={16} /> Clôturé</div>}
+              {specs.electrifie && <div className="flex items-center gap-1.5"><Zap size={16} /> Zone Électrifiée</div>}
+              {specs.documents_ok && <div className="flex items-center gap-1.5"><FileCheck size={16} /> Documents au point</div>}
+
                         {specs.cloture && <div className="flex items-center text-emerald-700 font-medium"><CheckCircle className="mr-2 text-emerald-500" size={18} /> Clôturé</div>}
                       </div>
                     </div>
