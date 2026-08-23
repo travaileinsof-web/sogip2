@@ -77,7 +77,8 @@ export default function AdminProperties() {
   const fetchProperties = async () => {
     try {
       const response = await api.get('/admin/properties');
-      setProperties(response.data);
+      const list = Array.isArray(response) ? response : (response?.data ?? []);
+      setProperties(list);
     } catch (error) {
       setMessage({ type: 'error', text: 'Erreur lors du chargement des offres immobilières.' });
     } finally {

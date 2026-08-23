@@ -44,7 +44,8 @@ export default function PropertiesList() {
     const fetchProperties = async () => {
       try {
         const response = await api.get('/admin/properties');
-        setProperties(response.data.filter((p: Property) => p.actif));
+        const list = Array.isArray(response) ? response : (response?.data ?? []);
+        setProperties(list.filter((p: Property) => p.actif));
       } catch (err) {
         setError('Erreur lors du chargement des offres immobilières.');
       } finally {
