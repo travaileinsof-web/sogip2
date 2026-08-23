@@ -138,6 +138,8 @@ ${contactForm.message}`;
             <option value="Villa">Villa</option>
             <option value="Appartement">Appartement</option>
             <option value="Immeuble">Immeuble</option>
+            <option value="Bureau">Bureau</option>
+            <option value="Commerce">Commerce / Boutique</option>
           </select>
         </div>
         <div>
@@ -222,7 +224,7 @@ ${contactForm.message}`;
         </div>
       )}
 
-      {/* Modale Details */}
+      {/* Modale Détails */}
       <AnimatePresence>
         {selectedProperty && (
           <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 md:p-6">
@@ -275,7 +277,7 @@ ${contactForm.message}`;
                 })()}
               </div>
 
-              {/* Details Side */}
+              {/* Détails Side */}
               <div className="w-full md:w-1/2 p-6 md:p-8 flex flex-col overflow-y-auto bg-white">
                 <div className="flex items-center gap-2 mb-4 flex-wrap">
                   <span className={`px-3 py-1 rounded-full text-xs font-bold text-white ${selectedProperty.transactionType === 'Vente' ? 'bg-blue-600' : 'bg-emerald-600'}`}>{selectedProperty.transactionType}</span>
