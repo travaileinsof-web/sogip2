@@ -11,7 +11,7 @@ const HERO = {
 
 const SERVICES = [
   {
-    icon: '🤝',
+    icon: '🎯',
     title: 'Vente & Achat Sans Commission',
     desc: "Avec LePropio, révolutionnez votre expérience immobilière. Notre modèle unique supprime les commissions d'agence traditionnelles, vous permettant de réaliser des économies significatives sur chaque transaction. Nous mettons directement en relation vendeurs et acheteurs dans la transparence totale, en garantissant des annonces vérifiées et sécurisées.",
     bullets: [
@@ -47,7 +47,7 @@ const SERVICES = [
     ],
   },
   {
-    icon: '🎯',
+    icon: '💡',
     title: 'Coaching Immobilier',
     desc: "Investir dans l'immobilier demande des connaissances spécifiques que peu de gens possèdent. Nos coachs immobiliers certifiés vous transmettent leur expertise à travers des sessions personnalisées : stratégie d'investissement, analyse de rentabilité, gestion de patrimoine et fiscalité immobilière pour vous permettre de prendre des décisions éclairées.",
     bullets: [
@@ -59,7 +59,7 @@ const SERVICES = [
     ],
   },
   {
-    icon: '🏘️',
+    icon: '✨',
     title: 'Mise en Valeur des Propriétés',
     desc: "La première impression est décisive dans une transaction immobilière. Notre équipe de home staging transforme votre bien pour qu'il séduise immédiatement les acheteurs ou locataires potentiels. Photographie professionnelle, visite virtuelle 360°, optimisation des espaces — nous maximisons l'attractivité et la valeur perçue de votre propriété.",
     bullets: [
@@ -71,7 +71,7 @@ const SERVICES = [
     ],
   },
   {
-    icon: '🔑',
+    icon: '📋',
     title: 'Gestion Locative',
     desc: "Propriétaire bailleur, confiez-nous la gestion complète de votre bien. De la recherche de locataires solvables à la gestion des réparations, en passant par la comptabilité et les démarches administratives — nous gérons tout pour vous permettre de profiter sereinement de vos revenus locatifs sans aucune contrainte.",
     bullets: [
@@ -84,16 +84,16 @@ const SERVICES = [
   },
 ];
 
-const FEATURES = [
+const WHY_US = [
   {
     icon: '💎',
     title: 'Transparence Totale',
-    desc: "Notre modèle sans commission et notre communication directe entre parties garantissent une totale transparence à chaque étape de votre transaction.",
+    desc: 'Notre modèle sans commission et notre communication directe entre parties garantissent une totale transparence à chaque étape de votre transaction.',
   },
   {
     icon: '🛡️',
     title: 'Sécurité Juridique',
-    desc: "Des juristes spécialisés vérifient chaque transaction pour vous protéger des vices cachés, litiges de propriété et autres risques juridiques.",
+    desc: 'Des juristes spécialisés vérifient chaque transaction pour vous protéger des vices cachés, litiges de propriété et autres risques juridiques.',
   },
   {
     icon: '📱',
@@ -119,9 +119,12 @@ const PROPERTIES_SECTION = (
 export default function SogipImmo() {
   return (
     <FilialePage
+      seo={{ title: "SOGIP IMMO — LePropio | Immobilier sans commission | SOGIP GROUP", description: "LePropio révolutionne l'immobilier en Guinée : vente sans commission, évaluation, accompagnement juridique et gestion locative." }}
       hero={HERO}
+      intro={"LePropio est la filiale immobilière du Groupe SOGIP. Notre mission : rendre l'immobilier accessible, transparent et rentable pour tous. En supprimant les intermédiaires coûteux et en plaçant la technologie au service de chaque transaction, nous transformons durablement le marché immobilier guinéen."}
       services={SERVICES}
-      features={FEATURES}
+      whyUs={WHY_US}
+      galleryCategory="immo"
       extra={PROPERTIES_SECTION}
     />
   );
